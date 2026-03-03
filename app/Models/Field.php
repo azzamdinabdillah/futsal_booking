@@ -23,4 +23,9 @@ class Field extends Model
         'status',
         'inactive_reason',
     ];
+
+    public function photos()
+    {
+        return $this->hasMany(FieldPhoto::class, 'field_id');
+    }
 }

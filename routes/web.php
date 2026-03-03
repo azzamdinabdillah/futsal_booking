@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FieldController;
+use App\Http\Controllers\FieldPhotoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -11,3 +12,4 @@ Route::get('/', function () {
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.home');
 Route::resource('admins', AdminController::class);
 Route::resource('fields', FieldController::class);
+Route::resource('field-photos', FieldPhotoController::class);

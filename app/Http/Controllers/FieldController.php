@@ -10,7 +10,10 @@ class FieldController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Fields/Index');
+        $fields = Field::with('photos')->get();
+        return Inertia::render('Fields/Index', [
+            'fields' => $fields,
+        ]);
     }
 
     public function create()
