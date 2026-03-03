@@ -4,17 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Field;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class FieldController extends Controller
 {
     public function index()
     {
-        return view('fields.index');
+        return Inertia::render('Fields/Index');
     }
 
     public function create()
     {
-        return view('fields.create');
+        return redirect()->route('fields.index');
     }
 
     public function store(Request $request)
@@ -24,12 +25,12 @@ class FieldController extends Controller
 
     public function show(Field $field)
     {
-        return view('fields.show', compact('field'));
+        return redirect()->route('fields.index');
     }
 
     public function edit(Field $field)
     {
-        return view('fields.edit', compact('field'));
+        return redirect()->route('fields.index');
     }
 
     public function update(Request $request, Field $field)

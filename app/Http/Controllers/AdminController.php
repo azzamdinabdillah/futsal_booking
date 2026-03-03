@@ -4,17 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        return view('admin.index');
+        return Inertia::render('Admin/Index');
     }
 
     public function create()
     {
-        return view('admin.create');
+        return redirect()->route('admins.index');
     }
 
     public function store(Request $request)
@@ -24,12 +25,12 @@ class AdminController extends Controller
 
     public function show(Admin $admin)
     {
-        return view('admin.show', compact('admin'));
+        return redirect()->route('admins.index');
     }
 
     public function edit(Admin $admin)
     {
-        return view('admin.edit', compact('admin'));
+        return redirect()->route('admins.index');
     }
 
     public function update(Request $request, Admin $admin)
