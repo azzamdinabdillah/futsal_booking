@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\AdminSeeder;
 use Database\Seeders\FieldSeeder;
 use Database\Seeders\SystemConfigSeeder;
+use Database\Seeders\BlockedSlotSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             FieldSeeder::class,
             SystemConfigSeeder::class,
+            BlockedSlotSeeder::class,
         ]);
     }
 }
