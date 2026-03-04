@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FieldPhotoController;
@@ -11,7 +12,10 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReviewController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return Inertia::render('Home', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+    ]);
 });
 
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.home');
