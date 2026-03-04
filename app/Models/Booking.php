@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Booking extends Model
 {
@@ -67,5 +68,13 @@ class Booking extends Model
     public function confirmedBy(): BelongsTo
     {
         return $this->belongsTo(Admin::class, 'confirmed_by');
+    }
+
+    /**
+     * Get the notifications for the booking.
+     */
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
     }
 }
