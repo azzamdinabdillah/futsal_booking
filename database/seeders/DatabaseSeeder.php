@@ -7,6 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Database\Seeders\AdminSeeder;
 use Database\Seeders\FieldSeeder;
+use Database\Seeders\SystemConfigSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             FieldSeeder::class,
+            SystemConfigSeeder::class,
         ]);
     }
 }
