@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
 class Booking extends Model
 {
     use HasFactory;
@@ -53,6 +55,14 @@ class Booking extends Model
         'dp_amount' => 'decimal:2',
         'remaining_amount' => 'decimal:2',
     ];
+
+    /**
+     * Get the review for the booking.
+     */
+    public function review(): HasOne
+    {
+        return $this->hasOne(Review::class);
+    }
 
     /**
      * Get the field that the booking belongs to.

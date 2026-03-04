@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class Field extends Model
 {
     use HasFactory;
@@ -24,8 +26,16 @@ class Field extends Model
         'inactive_reason',
     ];
 
-    public function photos()
+    public function photos(): HasMany
     {
         return $this->hasMany(FieldPhoto::class, 'field_id');
+    }
+
+    /**
+     * Get the reviews for the field.
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
     }
 }

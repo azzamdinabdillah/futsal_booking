@@ -11,6 +11,7 @@ use Database\Seeders\SystemConfigSeeder;
 use Database\Seeders\BlockedSlotSeeder;
 use Database\Seeders\BookingSeeder;
 use Database\Seeders\NotificationSeeder;
+use Database\Seeders\ReviewSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
             BlockedSlotSeeder::class,
             BookingSeeder::class,
             NotificationSeeder::class,
+            ReviewSeeder::class,
         ]);
     }
 }
