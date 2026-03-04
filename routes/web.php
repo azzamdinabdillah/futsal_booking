@@ -6,6 +6,7 @@ use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FieldPhotoController;
 use App\Http\Controllers\SystemConfigController;
 use App\Http\Controllers\BlockedSlotController;
+use App\Http\Controllers\BookingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,3 +18,4 @@ Route::resource('fields', FieldController::class);
 Route::resource('field-photos', FieldPhotoController::class);
 Route::resource('system-configs', SystemConfigController::class);
 Route::resource('blocked-slots', BlockedSlotController::class);
+Route::resource('bookings', BookingController::class);
