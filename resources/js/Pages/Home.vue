@@ -62,5 +62,10 @@ defineProps({
                 <p class="text-lg font-medium">Jl. Panglima Sudirman Pandean Gg. II No. 7-9 Kel, Setono Pande, Kec. Kota, Kota Kediri, Jawa Timur 64126</p>
             </div>
         </div>
+
+        <!-- Field Schedule -->
+         <div>
+            
+         </div>
     </div>
 </template>
