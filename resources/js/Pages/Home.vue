@@ -1,84 +1,40 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import Navbar from '../Components/Navbar.vue';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
-defineProps({
+const props = defineProps({
     canLogin: {
         type: Boolean,
     },
     canRegister: {
         type: Boolean,
     },
+    fields: {
+        type: Array,
+        default: () => [],
+    },
+    initialBookings: {
+        type: Array,
+        default: () => [],
+    },
+    initialDate: {
+        type: String,
+    }
 });
 
 // State for Schedule Section
-const selectedDate = ref(new Date().toISOString().split('T')[0]);
+const selectedDate = ref(props.initialDate || new Date().toISOString().split('T')[0]);
+const selectedField = ref(props.fields.length > 0 ? props.fields[0] : null);
 
-// Dummy data for fields
-const fields = ref([
-    {
-        id: 1,
-        name: 'Lapangan A',
-        type: 'Rumput Sintetis',
-        location: 'Indoor',
-        size: '5v5',
-        price: 'Rp 100.000 / jam',
-        image: '/assets/images/futsal-1.jpg',
-        bookings: [
-            { start: '09:00', end: '11:00' },
-            { start: '13:00', end: '14:00' },
-            { start: '17:00', end: '20:00' },
-        ]
-    },
-    {
-        id: 2,
-        name: 'Lapangan B',
-        type: 'Matras Interlock',
-        location: 'Indoor',
-        size: '5v5',
-        price: 'Rp 120.000 / jam',
-        image: '/assets/images/futsal-1.jpg',
-        bookings: [
-            { start: '10:00', end: '12:00' },
-            { start: '15:00', end: '16:00' },
-        ]
-    },
-    {
-        id: 3,
-        name: 'Lapangan C',
-        type: 'Rumput Sintetis',
-        location: 'Outdoor',
-        size: '7v7',
-        price: 'Rp 150.000 / jam',
-        image: '/assets/images/futsal-1.jpg',
-        bookings: []
-    },
-    {
-        id: 4,
-        name: 'Lapangan D',
-        type: 'Vinyl',
-        location: 'Indoor',
-        size: '5v5',
-        price: 'Rp 110.000 / jam',
-        image: '/assets/images/futsal-1.jpg',
-        bookings: [
-            { start: '19:00', end: '21:00' }
-        ]
-    },
-    {
-        id: 5,
-        name: 'Lapangan E',
-        type: 'Rumput Sintetis',
-        location: 'Indoor',
-        size: '5v5',
-        price: 'Rp 100.000 / jam',
-        image: '/assets/images/futsal-1.jpg',
-        bookings: [
-            { start: '16:00', end: '18:00' }
-        ]
-    }
-]);
+// Watch for date changes to fetch new bookings
+watch(selectedDate, (newDate) => {
+    router.get(route('home'), { date: newDate }, {
+        preserveState: true,
+        preserveScroll: true,
+        only: ['initialBookings', 'initialDate'],
+    });
+});
 
 const formattedDate = computed(() => {
     if (!selectedDate.value) return 'Pilih Tanggal';
@@ -86,25 +42,17 @@ const formattedDate = computed(() => {
     return date.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 });
 
-const selectedField = ref(fields.value[0]);
+// Get booked slots for the selected field
+const bookedSlots = computed(() => {
+    if (!selectedField.value || !props.initialBookings) return [];
+    
+    // Filter bookings for current field
+    return props.initialBookings
+        .filter(booking => booking.field_id === selectedField.value.id)
+        .map(booking => `${booking.start} - ${booking.end}`)
+        .sort();
+});
 
-const generateSlots = () => {
-    const slots = [];
-    for (let i = 8; i < 23; i++) {
-        const start = i < 10 ? `0${i}:00` : `${i}:00`;
-        const end = (i + 1) < 10 ? `0${i + 1}:00` : `${i + 1}:00`;
-        slots.push(`${start} - ${end}`);
-    }
-    return slots;
-};
-
-const isBooked = (slotLabel) => {
-    if (!selectedField.value || !selectedField.value.bookings) return false;
-    const [slotStart, slotEnd] = slotLabel.split(' - ');
-    return selectedField.value.bookings.some(b => {
-        return (slotStart >= b.start && slotStart < b.end);
-    });
-};
 </script>
 
 <template>
@@ -242,24 +190,25 @@ const isBooked = (slotLabel) => {
                         </div>
 
                         <!-- Slots -->
-                        <div>
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-[#1a472a]"></span>
-                                Slot Tersedia
-                            </h4>
-                            <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                                <div 
-                                    v-for="slot in generateSlots()" 
-                                    :key="slot"
-                                    class="px-2 py-2 rounded border text-center text-xs font-bold transition-all"
-                                    :class="isBooked(slot)
-                                        ? 'bg-red-50 border-red-100 text-red-500 cursor-not-allowed opacity-60 decoration-red-500 line-through'
-                                        : 'bg-white border-slate-200 text-slate-600 hover:border-[#1a472a] hover:text-[#1a472a] cursor-pointer'"
-                                >
-                                    {{ slot }}
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                                    Slot Terisi (Booked)
+                                </h4>
+                                <div v-if="bookedSlots.length > 0" class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                                    <div 
+                                        v-for="slot in bookedSlots" 
+                                        :key="slot"
+                                        class="px-2 py-2 rounded border text-center text-xs font-bold transition-all bg-red-50 border-red-100 text-red-500 cursor-not-allowed opacity-60 decoration-red-500 line-through"
+                                    >
+                                        {{ slot }}
+                                    </div>
                                 </div>
+                                <div v-else class="text-slate-500 text-sm italic bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                    Belum ada booking pada tanggal ini. Semua slot tersedia.
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-2">* Slot selain di atas tersedia untuk dibooking.</p>
                             </div>
-                        </div>
 
                         <!-- Action Button -->
                         <button class="w-full bg-[#bef264] hover:bg-[#a8e063] text-[#1a472a] font-bold py-3.5 rounded-xl shadow-lg shadow-[#bef264]/20 transition-transform active:scale-[0.98] flex items-center justify-center gap-2 text-lg">
