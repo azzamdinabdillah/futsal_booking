@@ -16,7 +16,13 @@ class HomeController extends Controller
         $date = $request->input('date', Carbon::now()->format('Y-m-d'));
 
         $fields = Field::with('photos')->where('status', 'active')->get()->map(function ($field) {
-            $photo = $field->photos->first();
+            $photos = $field->photos->sortBy('sort_order')->map(function ($photo) {
+                if (str_starts_with($photo->photo_url, 'assets/')) {
+                    return '/' . $photo->photo_url;
+                }
+                return '/storage/' . $photo->photo_url;
+            });
+
             return [
                 'id' => $field->id,
                 'name' => $field->name,
@@ -24,7 +30,7 @@ class HomeController extends Controller
                 'location' => $field->roof_type ?? 'Indoor',
                 'size' => $field->length_m . 'x' . $field->width_m . 'm',
                 'price' => 'Rp ' . number_format($field->price_per_hour, 0, ',', '.'),
-                'image' => $photo ? (str_starts_with($photo->photo_url, 'assets/') ? '/' . $photo->photo_url : '/storage/' . $photo->photo_url) : '/assets/images/futsal-1.jpg',
+                'photos' => $photos->isNotEmpty() ? $photos : ['/assets/images/futsal-1.jpg'],
             ];
         });
 

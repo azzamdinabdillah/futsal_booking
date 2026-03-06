@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@inertiajs/vue3": "^2.3.17",
+        "swiper": "^12.1.2",
         "vue": "^3.5.29"
     }
 }

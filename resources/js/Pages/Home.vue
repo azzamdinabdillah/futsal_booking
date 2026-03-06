@@ -2,6 +2,11 @@
 import { Head, Link, router } from '@inertiajs/vue3';
 import Navbar from '../Components/Navbar.vue';
 import { ref, computed, watch } from 'vue';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Autoplay, Pagination } from 'swiper/modules';
+
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const props = defineProps({
     canLogin: {
@@ -22,6 +27,8 @@ const props = defineProps({
         type: String,
     }
 });
+
+const modules = [Autoplay, Pagination];
 
 // State for Schedule Section
 const selectedDate = ref(props.initialDate || new Date().toISOString().split('T')[0]);
@@ -140,13 +147,25 @@ const bookedSlots = computed(() => {
             <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
                 <div class="flex flex-col md:flex-row">
                     <!-- Image Section -->
-                    <div class="w-full md:w-1/3 h-64 md:h-auto relative">
-                        <img 
-                            :src="selectedField.image" 
-                            :alt="selectedField.name"
-                            class="w-full h-full object-cover"
-                        />
-                        <div class="absolute top-4 left-4 bg-[#bef264] text-[#1a472a] px-3 py-1 rounded-lg text-xs font-bold shadow-sm flex items-center gap-1">
+                    <div class="w-full md:w-1/3 h-64 md:h-auto relative group">
+                        <swiper
+                            :modules="modules"
+                            :slides-per-view="1"
+                            :space-between="0"
+                            :autoplay="{ delay: 3000, disableOnInteraction: false }"
+                            :pagination="{ clickable: true }"
+                            :loop="true"
+                            class="w-full h-full"
+                        >
+                            <swiper-slide v-for="(photo, index) in selectedField.photos" :key="index">
+                                <img 
+                                    :src="photo"
+                                    :alt="`${selectedField.name} - Foto ${index + 1}`"
+                                    class="w-full h-full object-cover"
+                                />
+                            </swiper-slide>
+                        </swiper>
+                        <div class="absolute top-4 left-4 bg-[#bef264] text-[#1a472a] px-3 py-1 rounded-lg text-xs font-bold shadow-sm flex items-center gap-1 z-10">
                             <span class="material-symbols-outlined text-sm">star</span> 4.8
                         </div>
                     </div>
@@ -200,7 +219,7 @@ const bookedSlots = computed(() => {
                             <div>
                                 <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                                     <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                                    Slot Terisi (Booked) {{ selectedDate }}
+                                    Slot Terisi (Booked) {{ selectedDate }} <span v-if="selectedDate === new Date().toISOString().split('T')[0]" class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-800">Hari Ini</span>
                                 </h4>
                                 <div v-if="bookedSlots.length > 0" class="grid grid-cols-3 sm:grid-cols-4 gap-2">
                                     <div 
@@ -230,6 +249,19 @@ const bookedSlots = computed(() => {
 </template>
 
 <style scoped>
+:deep(.swiper-pagination-bullet) {
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 8px;
+    height: 8px;
+    transition: all 0.3s ease;
+}
+
+:deep(.swiper-pagination-bullet-active) {
+    background-color: #bef264;
+    width: 24px;
+    border-radius: 9999px;
+}
+
 /* Custom Scrollbar for Schedule List */
 .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
