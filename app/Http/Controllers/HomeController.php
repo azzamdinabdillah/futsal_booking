@@ -24,7 +24,7 @@ class HomeController extends Controller
                 'location' => $field->roof_type ?? 'Indoor',
                 'size' => $field->length_m . 'x' . $field->width_m . 'm',
                 'price' => 'Rp ' . number_format($field->price_per_hour, 0, ',', '.'),
-                'image' => $photo ? '/storage/' . $photo->photo_path : '/assets/images/futsal-1.jpg',
+                'image' => $photo ? (str_starts_with($photo->photo_url, 'assets/') ? '/' . $photo->photo_url : '/storage/' . $photo->photo_url) : '/assets/images/futsal-1.jpg',
             ];
         });
 

@@ -29,7 +29,7 @@ const selectedField = ref(props.fields.length > 0 ? props.fields[0] : null);
 
 // Watch for date changes to fetch new bookings
 watch(selectedDate, (newDate) => {
-    router.get(route('home'), { date: newDate }, {
+    router.get('/', { date: newDate }, {
         preserveState: true,
         preserveScroll: true,
         only: ['initialBookings', 'initialDate'],
@@ -125,7 +125,7 @@ const bookedSlots = computed(() => {
                         v-for="field in fields" 
                         :key="field.id"
                         @click="selectedField = field"
-                        class="flex items-center gap-2 px-6 py-2.5 rounded-full transition-all whitespace-nowrap shadow-sm border"
+                        class="flex items-center cursor-pointer gap-2 px-6 py-2.5 rounded-full transition-all whitespace-nowrap border"
                         :class="selectedField.id === field.id 
                             ? 'bg-[#1a472a] text-white border-[#1a472a]' 
                             : 'bg-white text-slate-500 border-slate-200 hover:border-[#1a472a]/50'"
@@ -137,7 +137,7 @@ const bookedSlots = computed(() => {
             </div>
 
             <!-- Main Card -->
-            <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
                 <div class="flex flex-col md:flex-row">
                     <!-- Image Section -->
                     <div class="w-full md:w-1/3 h-64 md:h-auto relative">
@@ -154,46 +154,53 @@ const bookedSlots = computed(() => {
                     <!-- Content Section -->
                     <div class="flex-1 p-6 flex flex-col gap-6">
                         <!-- Top Info -->
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h3 class="text-xl font-bold text-[#1a472a] mb-2">{{ selectedField.name }}</h3>
-                                <div class="flex flex-wrap gap-2 text-sm text-slate-600">
-                                    <span class="flex items-center gap-1 bg-slate-100 px-2 py-1 rounded text-xs font-medium">
-                                        <span class="material-symbols-outlined text-sm">location_on</span> {{ selectedField.location }}
-                                    </span>
-                                    <span class="flex items-center gap-1 bg-slate-100 px-2 py-1 rounded text-xs font-medium">
-                                        <span class="material-symbols-outlined text-sm">grass</span> {{ selectedField.type }}
-                                    </span>
-                                    <span class="flex items-center gap-1 bg-slate-100 px-2 py-1 rounded text-xs font-medium">
-                                        <span class="material-symbols-outlined text-sm">aspect_ratio</span> {{ selectedField.size }}
-                                    </span>
+                        <div class="flex flex-col gap-6">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-2xl sm:text-3xl font-bold text-[#1a472a] leading-tight">{{ selectedField.name }}</h3>
+                                <div class="text-right shrink-0">
+                                    <p class="text-2xl sm:text-3xl font-black text-[#1a472a]">{{ selectedField.price }}</p>
+                                    <p class="text-sm font-medium text-slate-500">per Jam</p>
                                 </div>
                             </div>
-                            <div class="text-right">
-                                <p class="text-lg font-extrabold text-[#1a472a]">{{ selectedField.price }}</p>
+
+                            <div class="flex flex-col sm:flex-row gap-3 flex-wrap">
+                                <div class="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg border border-slate-100 w-fit">
+                                    <span class="material-symbols-outlined text-[#1a472a]">location_on</span> 
+                                    <span class="font-semibold text-[#1a472a] capitalize">{{ selectedField.location }}</span>
+                                </div>
+                                <div class="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg border border-slate-100 w-fit">
+                                    <span class="material-symbols-outlined text-[#1a472a]">grass</span> 
+                                    <span class="font-semibold text-[#1a472a] capitalize">{{ selectedField.type }}</span>
+                                </div>
+                                <div class="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg border border-slate-100 w-fit">
+                                    <span class="material-symbols-outlined text-[#1a472a]">aspect_ratio</span> 
+                                    <span class="font-semibold text-[#1a472a]">{{ selectedField.size }}</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="border-t border-slate-100"></div>
+                        <!-- <div class="border-t border-slate-100"></div> -->
 
                         <!-- Date Picker -->
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-                            <div class="flex items-center gap-2 text-[#1a472a]">
-                                <span class="material-symbols-outlined">calendar_month</span>
-                                <label class="font-bold whitespace-nowrap">Pilih Tanggal</label>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-[#1a472a]">Pilih Tanggal Main</label>
+                            <div class="relative w-full">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-[#1a472a]">
+                                    <span class="material-symbols-outlined">calendar_month</span>
+                                </div>
+                                <input 
+                                    type="date" 
+                                    v-model="selectedDate" 
+                                    class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1a472a]/20 focus:border-[#1a472a] text-[#1a472a] font-bold transition-all hover:border-[#1a472a]/50 cursor-pointer"
+                                />
                             </div>
-                            <input 
-                                type="date" 
-                                v-model="selectedDate" 
-                                class="w-full rounded-lg border-slate-200 focus:ring-[#1a472a] focus:border-[#1a472a] text-[#1a472a] font-medium"
-                            />
                         </div>
 
                         <!-- Slots -->
                             <div>
                                 <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                                     <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                                    Slot Terisi (Booked)
+                                    Slot Terisi (Booked) {{ selectedDate }}
                                 </h4>
                                 <div v-if="bookedSlots.length > 0" class="grid grid-cols-3 sm:grid-cols-4 gap-2">
                                     <div 

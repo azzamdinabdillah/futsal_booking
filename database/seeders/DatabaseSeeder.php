@@ -7,6 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Database\Seeders\AdminSeeder;
 use Database\Seeders\FieldSeeder;
+use Database\Seeders\FieldPhotoSeeder;
 use Database\Seeders\SystemConfigSeeder;
 use Database\Seeders\BlockedSlotSeeder;
 use Database\Seeders\BookingSeeder;
@@ -25,6 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             FieldSeeder::class,
+            FieldPhotoSeeder::class,
             SystemConfigSeeder::class,
             BlockedSlotSeeder::class,
             BookingSeeder::class,
