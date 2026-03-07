@@ -48,38 +48,37 @@
           <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-semibold text-gray-800">Recent Activity</h3>
           </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse min-w-[600px]">
-              <thead>
-                <tr class="bg-gray-50 text-gray-600 text-sm uppercase">
-                  <th class="px-6 py-3 border-b">User</th>
-                  <th class="px-6 py-3 border-b">Action</th>
-                  <th class="px-6 py-3 border-b">Date</th>
-                  <th class="px-6 py-3 border-b">Status</th>
-                </tr>
-              </thead>
-              <tbody class="text-gray-700 text-sm">
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4 border-b">John Doe</td>
-                  <td class="px-6 py-4 border-b">Booked Field A</td>
-                  <td class="px-6 py-4 border-b">2024-03-01</td>
-                  <td class="px-6 py-4 border-b"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Completed</span></td>
-                </tr>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4 border-b">Jane Smith</td>
-                  <td class="px-6 py-4 border-b">Cancelled Booking</td>
-                  <td class="px-6 py-4 border-b">2024-02-28</td>
-                  <td class="px-6 py-4 border-b"><span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">Cancelled</span></td>
-                </tr>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4 border-b">Mike Johnson</td>
-                  <td class="px-6 py-4 border-b">New Registration</td>
-                  <td class="px-6 py-4 border-b">2024-02-27</td>
-                  <td class="px-6 py-4 border-b"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">New</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          
+          <Table>
+            <Thead>
+              <Tr>
+                <Th>User</Th>
+                <Th>Action</Th>
+                <Th>Date</Th>
+                <Th>Status</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td>John Doe</Td>
+                <Td>Booked Field A</Td>
+                <Td>2024-03-01</Td>
+                <Td><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Completed</span></Td>
+              </Tr>
+              <Tr>
+                <Td>Jane Smith</Td>
+                <Td>Cancelled Booking</Td>
+                <Td>2024-02-28</Td>
+                <Td><span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">Cancelled</span></Td>
+              </Tr>
+              <Tr>
+                <Td>Mike Johnson</Td>
+                <Td>New Registration</Td>
+                <Td>2024-02-27</Td>
+                <Td><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">New</span></Td>
+              </Tr>
+            </Tbody>
+          </Table>
         </div>
       </div>
     </main>
@@ -89,6 +88,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Sidebar from '@/Components/Admin/Sidebar.vue'
+import Table from '@/Components/Table/Table.vue'
+import Thead from '@/Components/Table/Thead.vue'
+import Tbody from '@/Components/Table/Tbody.vue'
+import Tr from '@/Components/Table/Tr.vue'
+import Th from '@/Components/Table/Th.vue'
+import Td from '@/Components/Table/Td.vue'
 
 const isSidebarOpen = ref(false)
 </script>

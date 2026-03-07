@@ -2,6 +2,12 @@
 import { ref } from 'vue'
 import Sidebar from '@/Components/Admin/Sidebar.vue'
 import { Head } from '@inertiajs/vue3'
+import Table from '@/Components/Table/Table.vue'
+import Thead from '@/Components/Table/Thead.vue'
+import Tbody from '@/Components/Table/Tbody.vue'
+import Tr from '@/Components/Table/Tr.vue'
+import Th from '@/Components/Table/Th.vue'
+import Td from '@/Components/Table/Td.vue'
 
 defineProps<{
   configs: Array<{
@@ -50,31 +56,30 @@ const isSidebarOpen = ref(false)
             <h3 class="text-lg font-semibold text-gray-800">Configuration List</h3>
             <!-- Add button could go here if needed -->
           </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse min-w-[600px]">
-              <thead>
-                <tr class="bg-gray-50 text-gray-600 text-sm uppercase">
-                  <th class="px-6 py-3 border-b">Key</th>
-                  <th class="px-6 py-3 border-b">Value</th>
-                  <th class="px-6 py-3 border-b">Description</th>
-                  <th class="px-6 py-3 border-b">Action</th>
-                </tr>
-              </thead>
-              <tbody class="text-gray-700 text-sm">
-                <tr v-for="config in configs" :key="config.id" class="hover:bg-gray-50">
-                  <td class="px-6 py-4 border-b font-medium text-gray-900">{{ config.key }}</td>
-                  <td class="px-6 py-4 border-b">{{ config.value }}</td>
-                  <td class="px-6 py-4 border-b">{{ config.description }}</td>
-                  <td class="px-6 py-4 border-b">
-                    <button class="text-blue-600 hover:text-blue-800 font-medium">Edit</button>
-                  </td>
-                </tr>
-                <tr v-if="configs.length === 0">
-                  <td colspan="4" class="px-6 py-4 text-center text-gray-500">No configurations found.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          
+          <Table>
+            <Thead>
+              <Tr>
+                <Th>Key</Th>
+                <Th>Value</Th>
+                <Th>Description</Th>
+                <Th>Action</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr v-for="config in configs" :key="config.id">
+                <Td class="font-medium text-gray-900">{{ config.key }}</Td>
+                <Td>{{ config.value }}</Td>
+                <Td>{{ config.description }}</Td>
+                <Td>
+                  <button class="text-blue-600 hover:text-blue-800 font-medium">Edit</button>
+                </Td>
+              </Tr>
+              <Tr v-if="configs.length === 0">
+                <Td colspan="4" class="text-center text-gray-500">No configurations found.</Td>
+              </Tr>
+            </Tbody>
+          </Table>
         </div>
       </div>
     </main>
