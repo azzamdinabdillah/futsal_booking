@@ -38,9 +38,9 @@ const emit = defineEmits(['close'])
       <a href="#" class="block px-4 py-2 rounded hover:bg-gray-700" @click="emit('close')">
         Users
       </a>
-      <a href="#" class="block px-4 py-2 rounded hover:bg-gray-700" @click="emit('close')">
-        Settings
-      </a>
+      <Link href="/admin/system-config" class="block px-4 py-2 rounded hover:bg-gray-700" @click="emit('close')">
+        System Config
+      </Link>
       <Link href="/" class="block px-4 py-2 rounded hover:bg-gray-700 text-red-300">
         Logout / Home
       </Link>
