@@ -33,13 +33,18 @@ const modules = [Autoplay, Pagination];
 // State for Schedule Section
 const selectedDate = ref(props.initialDate || new Date().toISOString().split('T')[0]);
 const selectedField = ref(props.fields.length > 0 ? props.fields[0] : null);
+const isLoading = ref(false);
 
 // Watch for date changes to fetch new bookings
 watch(selectedDate, (newDate) => {
+    isLoading.value = true;
     router.get('/', { date: newDate }, {
         preserveState: true,
         preserveScroll: true,
         only: ['initialBookings', 'initialDate'],
+        onFinish: () => {
+            isLoading.value = false;
+        }
     });
 });
 
@@ -176,24 +181,24 @@ const bookedSlots = computed(() => {
                         <div class="flex flex-col gap-6">
                             <div class="flex justify-between items-start">
                                 <h3 class="text-2xl sm:text-3xl font-bold text-[#1a472a] leading-tight">{{ selectedField.name }}</h3>
-                                <div class="text-right shrink-0">
-                                    <p class="text-2xl sm:text-3xl font-black text-[#1a472a]">{{ selectedField.price }}</p>
-                                    <p class="text-sm font-medium text-slate-500">per Jam</p>
+                                <div class="text-right shrink-0 flex items-center gap-1">
+                                    <p class="text-2xl sm:text-3xl font-black text-[#050505]">{{ selectedField.price }}</p>
+                                    <p class="text-sm font-medium text-slate-500">/ Jam</p>
                                 </div>
                             </div>
 
-                            <div class="flex flex-col sm:flex-row gap-3 flex-wrap">
-                                <div class="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg border border-slate-100 w-fit">
-                                    <span class="material-symbols-outlined text-[#1a472a]">location_on</span> 
-                                    <span class="font-semibold text-[#1a472a] capitalize">{{ selectedField.location }}</span>
+                            <div class="flex gap-3 flex-wrap">
+                                <div class="flex items-center gap-1.5 px-2 py-1.5 sm:gap-2 sm:px-3 sm:py-2 bg-slate-50 rounded-lg border border-slate-100 w-fit">
+                                    <span class="material-symbols-outlined text-[#1a472a] text-sm sm:text-base">location_on</span> 
+                                    <span class="font-semibold text-[#1a472a] capitalize text-xs sm:text-sm">{{ selectedField.location }}</span>
                                 </div>
-                                <div class="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg border border-slate-100 w-fit">
-                                    <span class="material-symbols-outlined text-[#1a472a]">grass</span> 
-                                    <span class="font-semibold text-[#1a472a] capitalize">{{ selectedField.type }}</span>
+                                <div class="flex items-center gap-1.5 px-2 py-1.5 sm:gap-2 sm:px-3 sm:py-2 bg-slate-50 rounded-lg border border-slate-100 w-fit">
+                                    <span class="material-symbols-outlined text-[#1a472a] text-sm sm:text-base">grass</span> 
+                                    <span class="font-semibold text-[#1a472a] capitalize text-xs sm:text-sm">{{ selectedField.type }}</span>
                                 </div>
-                                <div class="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg border border-slate-100 w-fit">
-                                    <span class="material-symbols-outlined text-[#1a472a]">aspect_ratio</span> 
-                                    <span class="font-semibold text-[#1a472a]">{{ selectedField.size }}</span>
+                                <div class="flex items-center gap-1.5 px-2 py-1.5 sm:gap-2 sm:px-3 sm:py-2 bg-slate-50 rounded-lg border border-slate-100 w-fit">
+                                    <span class="material-symbols-outlined text-[#1a472a] text-sm sm:text-base">aspect_ratio</span> 
+                                    <span class="font-semibold text-[#1a472a] text-xs sm:text-sm">{{ selectedField.size }}</span>
                                 </div>
                             </div>
                         </div>
@@ -205,21 +210,35 @@ const bookedSlots = computed(() => {
                             <label class="block text-sm font-bold text-[#1a472a]">Pilih Tanggal Main</label>
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-[#1a472a]">
-                                    <span class="material-symbols-outlined">calendar_month</span>
+                                    <span v-if="!isLoading" class="material-symbols-outlined">calendar_month</span>
+                                    <div v-else class="w-5 h-5 border-2 border-[#1a472a] border-t-transparent rounded-full animate-spin"></div>
                                 </div>
                                 <input 
                                     type="date" 
                                     v-model="selectedDate" 
-                                    class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1a472a]/20 focus:border-[#1a472a] text-[#1a472a] font-bold transition-all hover:border-[#1a472a]/50 cursor-pointer"
+                                    :disabled="isLoading"
+                                    class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1a472a]/20 focus:border-[#1a472a] text-[#1a472a] font-bold transition-all hover:border-[#1a472a]/50 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                                 />
                             </div>
                         </div>
 
                         <!-- Slots -->
-                            <div>
-                                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                                    Slot Terisi (Booked) {{ selectedDate }} <span v-if="selectedDate === new Date().toISOString().split('T')[0]" class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-800">Hari Ini</span>
+                            <div class="relative min-h-[100px]">
+                                <!-- Loading Overlay -->
+                                <div v-if="isLoading" class="absolute inset-0 z-20 bg-white/60 backdrop-blur-[1px] flex items-center justify-center rounded-xl transition-all duration-300">
+                                    <div class="flex flex-col items-center gap-3">
+                                        <div class="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin text-indigo-600"></div>
+                                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest animate-pulse">Memuat Jadwal...</span>
+                                    </div>
+                                </div>
+
+                                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center flex-wrap gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                                        Slot Terisi (Booked) {{ selectedDate }} 
+                                    </div>
+
+                                    <span v-if="selectedDate === new Date().toISOString().split('T')[0]" class="md:ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-800">Hari Ini</span>
                                 </h4>
                                 <div v-if="bookedSlots.length > 0" class="grid grid-cols-3 sm:grid-cols-4 gap-2">
                                     <div 
