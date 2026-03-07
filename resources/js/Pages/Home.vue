@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
 import Navbar from '../Components/Navbar.vue';
 import { ref, computed, watch } from 'vue';
@@ -8,32 +8,41 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const props = defineProps({
-    canLogin: {
-        type: Boolean,
-    },
-    canRegister: {
-        type: Boolean,
-    },
-    fields: {
-        type: Array,
-        default: () => [],
-    },
-    initialBookings: {
-        type: Array,
-        default: () => [],
-    },
-    initialDate: {
-        type: String,
-    }
+interface Field {
+    id: number;
+    name: string;
+    price: string | number;
+    location: string;
+    type: string;
+    size: string;
+    photos: string[];
+    [key: string]: any;
+}
+
+interface Booking {
+    field_id: number;
+    start: string;
+    end: string;
+    [key: string]: any;
+}
+
+const props = withDefaults(defineProps<{
+    canLogin?: boolean;
+    canRegister?: boolean;
+    fields?: Field[];
+    initialBookings?: Booking[];
+    initialDate?: string;
+}>(), {
+    fields: () => [],
+    initialBookings: () => [],
 });
 
 const modules = [Autoplay, Pagination];
 
 // State for Schedule Section
-const selectedDate = ref(props.initialDate || new Date().toISOString().split('T')[0]);
-const selectedField = ref(props.fields.length > 0 ? props.fields[0] : null);
-const isLoading = ref(false);
+const selectedDate = ref<string>(props.initialDate || new Date().toISOString().split('T')[0]);
+const selectedField = ref<Field | null>(props.fields.length > 0 ? props.fields[0] : null);
+const isLoading = ref<boolean>(false);
 
 // Watch for date changes to fetch new bookings
 watch(selectedDate, (newDate) => {
@@ -48,19 +57,19 @@ watch(selectedDate, (newDate) => {
     });
 });
 
-const formattedDate = computed(() => {
+const formattedDate = computed<string>(() => {
     if (!selectedDate.value) return 'Pilih Tanggal';
     const date = new Date(selectedDate.value);
     return date.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 });
 
 // Get booked slots for the selected field
-const bookedSlots = computed(() => {
+const bookedSlots = computed<string[]>(() => {
     if (!selectedField.value || !props.initialBookings) return [];
     
     // Filter bookings for current field
     return props.initialBookings
-        .filter(booking => booking.field_id === selectedField.value.id)
+        .filter(booking => booking.field_id === selectedField.value!.id)
         .map(booking => `${booking.start} - ${booking.end}`)
         .sort();
 });
@@ -138,7 +147,7 @@ const bookedSlots = computed(() => {
                         :key="field.id"
                         @click="selectedField = field"
                         class="flex items-center cursor-pointer gap-2 px-6 py-2.5 rounded-full transition-all whitespace-nowrap border"
-                        :class="selectedField.id === field.id 
+                        :class="selectedField?.id === field.id 
                             ? 'bg-[#1a472a] text-white border-[#1a472a]' 
                             : 'bg-white text-slate-500 border-slate-200 hover:border-[#1a472a]/50'"
                     >
@@ -149,7 +158,7 @@ const bookedSlots = computed(() => {
             </div>
 
             <!-- Main Card -->
-            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden" v-if="selectedField">
                 <div class="flex flex-col md:flex-row">
                     <!-- Image Section -->
                     <div class="w-full md:w-1/3 h-64 md:h-auto relative group">

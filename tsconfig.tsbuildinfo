@@ -1,0 +1,1 @@
+{"root":["./resources/js/app.ts","./resources/js/bootstrap.ts","./resources/js/vite-env.d.ts","./resources/js/types/global.d.ts","./resources/js/types/vue.d.ts","./resources/js/components/navbar.vue","./resources/js/pages/home.vue","./resources/js/pages/admin/index.vue"],"version":"5.9.3"}
