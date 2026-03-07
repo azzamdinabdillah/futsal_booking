@@ -1,44 +1,34 @@
 <template>
   <div class="flex h-screen bg-gray-100">
     <!-- Sidebar -->
-    <aside class="w-64 bg-gray-800 text-white flex flex-col">
-      <div class="p-4 text-2xl font-bold border-b border-gray-700">
-        Admin Panel
-      </div>
-      <nav class="flex-1 p-4 space-y-2">
-        <a href="#" class="block px-4 py-2 rounded hover:bg-gray-700 bg-gray-700">
-          Dashboard
-        </a>
-        <a href="#" class="block px-4 py-2 rounded hover:bg-gray-700">
-          Users
-        </a>
-        <a href="#" class="block px-4 py-2 rounded hover:bg-gray-700">
-          Settings
-        </a>
-        <Link href="/" class="block px-4 py-2 rounded hover:bg-gray-700 text-red-300">
-          Logout / Home
-        </Link>
-      </nav>
-      <div class="p-4 border-t border-gray-700 text-sm text-gray-400">
-        &copy; 2024 Futsal Booking
-      </div>
-    </aside>
+    <Sidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto">
+    <main class="flex-1 overflow-y-auto flex flex-col w-full">
       <!-- Header -->
-      <header class="bg-white shadow p-4 flex justify-between items-center">
-        <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+      <header class="bg-white shadow p-4 flex justify-between items-center sticky top-0 z-10">
+        <div class="flex items-center">
+          <!-- Hamburger Button -->
+          <button 
+            @click="isSidebarOpen = !isSidebarOpen" 
+            class="mr-4 text-gray-600 hover:text-gray-900 focus:outline-none md:hidden"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+        </div>
         <div class="flex items-center space-x-4">
-          <span class="text-gray-600">Admin User</span>
+          <span class="text-gray-600 hidden sm:inline">Admin User</span>
           <div class="w-8 h-8 bg-gray-300 rounded-full"></div>
         </div>
       </header>
 
       <!-- Content -->
-      <div class="p-6">
+      <div class="p-4 md:p-6">
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6">
           <div class="bg-white p-6 rounded-lg shadow">
             <h3 class="text-gray-500 text-sm font-medium">Total Users</h3>
             <p class="text-3xl font-bold text-gray-800 mt-2">1,234</p>
@@ -59,7 +49,7 @@
             <h3 class="text-lg font-semibold text-gray-800">Recent Activity</h3>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse min-w-[600px]">
               <thead>
                 <tr class="bg-gray-50 text-gray-600 text-sm uppercase">
                   <th class="px-6 py-3 border-b">User</th>
@@ -97,5 +87,8 @@
 </template>
 
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3'
+import { ref } from 'vue'
+import Sidebar from '@/Components/Admin/Sidebar.vue'
+
+const isSidebarOpen = ref(false)
 </script>
