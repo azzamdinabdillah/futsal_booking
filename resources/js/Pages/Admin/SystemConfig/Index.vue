@@ -1,24 +1,50 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import Sidebar from '@/Components/Admin/Sidebar.vue'
 import { Head } from '@inertiajs/vue3'
-import Table from '@/Components/Table/Table.vue'
-import Thead from '@/Components/Table/Thead.vue'
-import Tbody from '@/Components/Table/Tbody.vue'
-import Tr from '@/Components/Table/Tr.vue'
-import Th from '@/Components/Table/Th.vue'
-import Td from '@/Components/Table/Td.vue'
+import DataTable from '@/Components/Table/DataTable.vue'
+import { createColumnHelper } from '@tanstack/vue-table'
+
+type Config = {
+  id: number
+  key: string
+  value: string
+  description: string
+}
 
 defineProps<{
-  configs: Array<{
-    id: number
-    key: string
-    value: string
-    description: string
-  }>
+  configs: Config[]
 }>()
 
 const isSidebarOpen = ref(false)
+
+const columnHelper = createColumnHelper<Config>()
+
+const columns = [
+  columnHelper.accessor('key', {
+    header: 'Key',
+    cell: info => h('span', { class: 'font-medium text-gray-900' }, info.getValue()),
+  }),
+  columnHelper.accessor('value', {
+    header: 'Value',
+    cell: info => info.getValue(),
+  }),
+  columnHelper.accessor('description', {
+    header: 'Description',
+    cell: info => info.getValue(),
+  }),
+  columnHelper.display({
+    id: 'actions',
+    header: 'Action',
+    cell: ({ row }) => h('button', {
+      class: 'text-blue-600 hover:text-blue-800 font-medium',
+      onClick: () => {
+        // Edit logic will be implemented later
+        console.log('Edit', row.original)
+      }
+    }, 'Edit'),
+  }),
+]
 </script>
 
 <template>
@@ -57,29 +83,7 @@ const isSidebarOpen = ref(false)
             <!-- Add button could go here if needed -->
           </div>
           
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Key</Th>
-                <Th>Value</Th>
-                <Th>Description</Th>
-                <Th>Action</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr v-for="config in configs" :key="config.id">
-                <Td class="font-medium text-gray-900">{{ config.key }}</Td>
-                <Td>{{ config.value }}</Td>
-                <Td>{{ config.description }}</Td>
-                <Td>
-                  <button class="text-blue-600 hover:text-blue-800 font-medium">Edit</button>
-                </Td>
-              </Tr>
-              <Tr v-if="configs.length === 0">
-                <Td colspan="4" class="text-center text-gray-500">No configurations found.</Td>
-              </Tr>
-            </Tbody>
-          </Table>
+          <DataTable :columns="columns" :data="configs" />
         </div>
       </div>
     </main>

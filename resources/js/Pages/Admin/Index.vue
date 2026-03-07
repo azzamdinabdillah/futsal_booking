@@ -49,36 +49,7 @@
             <h3 class="text-lg font-semibold text-gray-800">Recent Activity</h3>
           </div>
           
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>User</Th>
-                <Th>Action</Th>
-                <Th>Date</Th>
-                <Th>Status</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td>John Doe</Td>
-                <Td>Booked Field A</Td>
-                <Td>2024-03-01</Td>
-                <Td><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Completed</span></Td>
-              </Tr>
-              <Tr>
-                <Td>Jane Smith</Td>
-                <Td>Cancelled Booking</Td>
-                <Td>2024-02-28</Td>
-                <Td><span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">Cancelled</span></Td>
-              </Tr>
-              <Tr>
-                <Td>Mike Johnson</Td>
-                <Td>New Registration</Td>
-                <Td>2024-02-27</Td>
-                <Td><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">New</span></Td>
-              </Tr>
-            </Tbody>
-          </Table>
+          <DataTable :columns="columns" :data="activities" />
         </div>
       </div>
     </main>
@@ -86,14 +57,43 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import Sidebar from '@/Components/Admin/Sidebar.vue'
-import Table from '@/Components/Table/Table.vue'
-import Thead from '@/Components/Table/Thead.vue'
-import Tbody from '@/Components/Table/Tbody.vue'
-import Tr from '@/Components/Table/Tr.vue'
-import Th from '@/Components/Table/Th.vue'
-import Td from '@/Components/Table/Td.vue'
+import DataTable from '@/Components/Table/DataTable.vue'
+import { createColumnHelper } from '@tanstack/vue-table'
 
 const isSidebarOpen = ref(false)
+
+type Activity = {
+  user: string
+  action: string
+  date: string
+  status: string
+}
+
+const activities: Activity[] = [
+  { user: 'John Doe', action: 'Booked Field A', date: '2024-03-01', status: 'Completed' },
+  { user: 'Jane Smith', action: 'Cancelled Booking', date: '2024-02-28', status: 'Cancelled' },
+  { user: 'Mike Johnson', action: 'New Registration', date: '2024-02-27', status: 'New' },
+]
+
+const columnHelper = createColumnHelper<Activity>()
+
+const columns = [
+  columnHelper.accessor('user', { header: 'User' }),
+  columnHelper.accessor('action', { header: 'Action' }),
+  columnHelper.accessor('date', { header: 'Date' }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    cell: info => {
+      const status = info.getValue()
+      let className = 'px-2 py-1 rounded-full text-xs '
+      if (status === 'Completed') className += 'bg-green-100 text-green-800'
+      else if (status === 'Cancelled') className += 'bg-red-100 text-red-800'
+      else className += 'bg-blue-100 text-blue-800'
+      
+      return h('span', { class: className }, status)
+    }
+  }),
+]
 </script>
