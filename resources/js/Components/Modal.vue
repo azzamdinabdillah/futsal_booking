@@ -56,7 +56,7 @@ onUnmounted(() => {
                 leave-from-class="opacity-100"
                 leave-to-class="opacity-0"
             >
-                <div v-show="show" class="fixed inset-0 bg-gray-500/75 bg-opacity-75 transition-opacity" @click="close" />
+                <div v-show="show" class="fixed inset-0 bg-black/40 bg-opacity-75 transition-opacity" @click="close" />
             </transition>
 
             <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
