@@ -26,6 +26,18 @@ class SystemConfigController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Validation and update logic will be added later as per user request
+        // dd("bismillah");
+        $config = SystemConfig::findOrFail($id);
+
+        $validated = $request->validate([
+            'value' => 'required|string',
+            'description' => 'nullable|string',
+        ]);
+
+        $config->update($validated);
+
+        return redirect()->to('/admin/system-config');
+
+        // return to_route('admin.system-config.index')->with('success', 'Configuration updated successfully!');
     }
 }

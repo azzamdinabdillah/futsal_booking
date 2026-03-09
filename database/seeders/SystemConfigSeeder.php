@@ -48,6 +48,47 @@ class SystemConfigSeeder extends Seeder
                 'value' => 'PT Futsal Indonesia',
                 'description' => 'Nama pemilik rekening',
             ],
+            // Color Palette
+            [
+                'key' => 'color_primary',
+                'value' => '#0F172A', // Slate 900
+                'description' => 'Warna utama aplikasi (Primary)',
+            ],
+            [
+                'key' => 'color_secondary',
+                'value' => '#64748B', // Slate 500
+                'description' => 'Warna sekunder aplikasi (Secondary)',
+            ],
+            [
+                'key' => 'color_success',
+                'value' => '#22C55E', // Green 500
+                'description' => 'Warna indikator sukses',
+            ],
+            [
+                'key' => 'color_danger',
+                'value' => '#EF4444', // Red 500
+                'description' => 'Warna indikator bahaya/error',
+            ],
+            [
+                'key' => 'color_warning',
+                'value' => '#F59E0B', // Amber 500
+                'description' => 'Warna indikator peringatan',
+            ],
+            [
+                'key' => 'color_info',
+                'value' => '#3B82F6', // Blue 500
+                'description' => 'Warna indikator informasi',
+            ],
+            [
+                'key' => 'color_light',
+                'value' => '#F8FAFC', // Slate 50
+                'description' => 'Warna latar terang',
+            ],
+            [
+                'key' => 'color_dark',
+                'value' => '#020617', // Slate 950
+                'description' => 'Warna latar gelap/teks',
+            ],
         ];
 
         foreach ($configs as $config) {
