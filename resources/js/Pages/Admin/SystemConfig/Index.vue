@@ -6,6 +6,8 @@ import DataTable from '@/Components/Table/DataTable.vue'
 import { createColumnHelper } from '@tanstack/vue-table'
 import Modal from '@/Components/Modal.vue'
 import Button from '@/Components/Admin/Button.vue'
+import TextInput from '@/Components/Admin/TextInput.vue'
+import TextArea from '@/Components/Admin/TextArea.vue'
 
 type Config = {
   id: number
@@ -127,28 +129,21 @@ const columns = [
         </h2>
         
         <form @submit.prevent="submitEdit">
-          <div class="mb-4">
-            <label for="value" class="block text-sm font-medium text-gray-700 mb-1">Value</label>
-            <input 
-              id="value" 
-              v-model="form.value" 
-              type="text" 
-              class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
-              required
-            />
-            <div v-if="form.errors.value" class="text-red-500 text-sm mt-1">{{ form.errors.value }}</div>
-          </div>
+          <TextInput
+            id="value"
+            v-model="form.value"
+            label="Value"
+            :error="form.errors.value"
+            required
+          />
 
-          <div class="mb-6">
-            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea 
-              id="description" 
-              v-model="form.description" 
-              rows="3"
-              class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
-            ></textarea>
-            <div v-if="form.errors.description" class="text-red-500 text-sm mt-1">{{ form.errors.description }}</div>
-          </div>
+          <TextArea
+            id="description"
+            v-model="form.description"
+            label="Description"
+            :rows="3"
+            :error="form.errors.description"
+          />
 
           <div class="flex justify-end space-x-3">
             <Button 
