@@ -5,6 +5,7 @@ import { Head, useForm, usePage } from '@inertiajs/vue3'
 import DataTable from '@/Components/Table/DataTable.vue'
 import { createColumnHelper } from '@tanstack/vue-table'
 import Modal from '@/Components/Modal.vue'
+import Button from '@/Components/Admin/Button.vue'
 
 type Config = {
   id: number
@@ -68,10 +69,11 @@ const columns = [
   columnHelper.display({
     id: 'actions',
     header: 'Action',
-    cell: ({ row }) => h('button', {
-      class: 'text-blue-600 hover:text-blue-800 font-medium',
+    cell: ({ row }) => h(Button, {
+      variant: 'primary',
+      size: 'sm',
       onClick: () => openEditModal(row.original)
-    }, 'Edit'),
+    }, () => 'Edit'),
   }),
 ]
 </script>
@@ -149,20 +151,21 @@ const columns = [
           </div>
 
           <div class="flex justify-end space-x-3">
-            <button 
+            <Button 
               type="button" 
+              variant="secondary"
               @click="closeEditModal"
-              class="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
             >
               Cancel
-            </button>
-            <button 
+            </Button>
+            <Button 
               type="submit" 
-              class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              variant="primary"
               :disabled="form.processing"
+              :loading="form.processing"
             >
               Save Changes
-            </button>
+            </Button>
           </div>
         </form>
       </div>
