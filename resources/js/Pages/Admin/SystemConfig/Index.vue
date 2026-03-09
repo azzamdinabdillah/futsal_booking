@@ -36,9 +36,16 @@ const openEditModal = (config: Config) => {
   form.value = config.value
   form.description = config.description
   
-  // Check if value is a valid hex color
-  const isColor = /^#[0-9A-F]{6}$/i.test(config.value)
-  inputType.value = isColor ? 'color' : 'text'
+  // Check if key starts with 'color' (case insensitive)
+  const isColorConfig = config.key.toLowerCase().startsWith('color')
+  
+  if (isColorConfig) {
+    // Check if value is a valid hex color
+    const isColor = /^#[0-9A-F]{6}$/i.test(config.value)
+    inputType.value = isColor ? 'color' : 'text'
+  } else {
+    inputType.value = 'text'
+  }
   
   isEditModalOpen.value = true
 }
@@ -138,6 +145,7 @@ const columns = [
         <form @submit.prevent="submitEdit">
           <!-- Input Type Selector -->
           <RadioGroup 
+            v-if="editingConfig?.key.toLowerCase().startsWith('color')"
             v-model="inputType" 
             label="Input Type" 
             :options="[
