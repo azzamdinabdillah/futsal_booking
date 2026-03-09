@@ -1,11 +1,22 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
+import { computed } from 'vue'
 
 defineProps<{
   isOpen: boolean
 }>()
 
 const emit = defineEmits(['close'])
+
+const page = usePage()
+const currentPath = computed(() => page.url.split('?')[0])
+
+const isActive = (path: string) => {
+  if (path === '#') return false
+  // Strict match for dashboard root to avoid highlighting on sub-pages unless desired
+  if (path === '/admin') return currentPath.value === '/admin'
+  return currentPath.value.startsWith(path)
+}
 </script>
 
 <template>
@@ -32,13 +43,28 @@ const emit = defineEmits(['close'])
     </div>
     
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-      <Link href="/admin" class="block px-4 py-2 rounded hover:bg-gray-700 bg-gray-700" @click="emit('close')">
+      <Link 
+        href="/admin" 
+        class="block px-4 py-2 rounded hover:bg-gray-700" 
+        :class="{ 'bg-gray-700': isActive('/admin') }"
+        @click="emit('close')"
+      >
         Dashboard
       </Link>
-      <a href="#" class="block px-4 py-2 rounded hover:bg-gray-700" @click="emit('close')">
+      <a 
+        href="#" 
+        class="block px-4 py-2 rounded hover:bg-gray-700" 
+        :class="{ 'bg-gray-700': isActive('#') }"
+        @click="emit('close')"
+      >
         Users
       </a>
-      <Link href="/admin/system-config" class="block px-4 py-2 rounded hover:bg-gray-700" @click="emit('close')">
+      <Link 
+        href="/admin/system-config" 
+        class="block px-4 py-2 rounded hover:bg-gray-700" 
+        :class="{ 'bg-gray-700': isActive('/admin/system-config') }"
+        @click="emit('close')"
+      >
         System Config
       </Link>
       <Link href="/" class="block px-4 py-2 rounded hover:bg-gray-700 text-red-300">
