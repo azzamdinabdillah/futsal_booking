@@ -8,6 +8,7 @@ import Modal from '@/Components/Modal.vue'
 import Button from '@/Components/Admin/Button.vue'
 import TextInput from '@/Components/Admin/TextInput.vue'
 import TextArea from '@/Components/Admin/TextArea.vue'
+import RadioGroup from '@/Components/Admin/RadioGroup.vue'
 
 type Config = {
   id: number
@@ -23,6 +24,7 @@ const props = defineProps<{
 const isSidebarOpen = ref(false)
 const isEditModalOpen = ref(false)
 const editingConfig = ref<Config | null>(null)
+const inputType = ref<'text' | 'color'>('text')
 
 const form = useForm({
   value: '',
@@ -33,6 +35,11 @@ const openEditModal = (config: Config) => {
   editingConfig.value = config
   form.value = config.value
   form.description = config.description
+  
+  // Check if value is a valid hex color
+  const isColor = /^#[0-9A-F]{6}$/i.test(config.value)
+  inputType.value = isColor ? 'color' : 'text'
+  
   isEditModalOpen.value = true
 }
 
@@ -129,13 +136,44 @@ const columns = [
         </h2>
         
         <form @submit.prevent="submitEdit">
+          <!-- Input Type Selector -->
+          <RadioGroup 
+            v-model="inputType" 
+            label="Input Type" 
+            :options="[
+              { label: 'Text', value: 'text' },
+              { label: 'Color Picker', value: 'color' }
+            ]" 
+            :inline="true"
+          />
+
           <TextInput
+            v-if="inputType === 'text'"
             id="value"
             v-model="form.value"
             label="Value"
             :error="form.errors.value"
             required
           />
+
+          <div v-else class="mb-5">
+            <label for="color-value" class="block text-sm font-semibold text-gray-700 mb-1.5">Value</label>
+            <div class="flex items-center space-x-3">
+              <input 
+                type="color" 
+                id="color-value" 
+                v-model="form.value"
+                class="h-10 w-20 p-1 border border-gray-300 rounded-md cursor-pointer"
+              >
+              <span class="text-gray-700 font-mono bg-gray-100 px-2 py-1 rounded border border-gray-200">{{ form.value }}</span>
+            </div>
+            <p v-if="form.errors.value" class="mt-2 text-sm text-red-600 flex items-center animate-in fade-in slide-in-from-top-1 duration-200">
+                <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ form.errors.value }}
+            </p>
+          </div>
 
           <TextArea
             id="description"
