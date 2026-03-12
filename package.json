@@ -21,6 +21,7 @@
     "dependencies": {
         "@inertiajs/vue3": "^2.3.17",
         "@tanstack/vue-table": "^8.21.3",
+        "lucide-vue-next": "^0.577.0",
         "swiper": "^12.1.2",
         "vue": "^3.5.29",
         "vue-toastification": "^2.0.0-rc.5"
