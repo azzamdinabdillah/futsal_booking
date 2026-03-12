@@ -9,6 +9,7 @@ import Button from '@/Components/Admin/Button.vue'
 import TextInput from '@/Components/Admin/TextInput.vue'
 import TextArea from '@/Components/Admin/TextArea.vue'
 import RadioGroup from '@/Components/Admin/RadioGroup.vue'
+import { useToast } from "vue-toastification"
 
 type Config = {
   id: number
@@ -25,6 +26,7 @@ const isSidebarOpen = ref(false)
 const isEditModalOpen = ref(false)
 const editingConfig = ref<Config | null>(null)
 const inputType = ref<'text' | 'color'>('text')
+const toast = useToast()
 
 const form = useForm({
   value: '',
@@ -63,7 +65,11 @@ const submitEdit = () => {
   form.post(`/admin/system-config/${editingConfig.value.id}`, {
     onSuccess: () => {
       closeEditModal()
+      toast.success("Konfigurasi berhasil diperbarui")
     },
+    onError: () => {
+      toast.error("Gagal memperbarui konfigurasi")
+    }
   })
 }
 

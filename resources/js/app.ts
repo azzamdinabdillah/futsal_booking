@@ -3,6 +3,8 @@
 import { createApp, h, DefineComponent } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 
 createInertiaApp({
     resolve: (name) => resolvePageComponent(
@@ -12,6 +14,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
+            .use(Toast)
             .mount(el);
     },
 });
