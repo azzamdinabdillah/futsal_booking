@@ -24,7 +24,7 @@ const groupName = computed(() => props.name || `radio-group-${Math.random().toSt
 
 <template>
   <div class="mb-4">
-    <label v-if="label" class="block text-sm font-medium text-gray-700 mb-2">
+    <label v-if="label" class="block text-sm font-medium text-dark mb-2">
       {{ label }}
     </label>
     <div :class="[inline ? 'flex flex-wrap gap-3' : 'space-y-2']">
@@ -34,8 +34,8 @@ const groupName = computed(() => props.name || `radio-group-${Math.random().toSt
         class="relative flex items-center cursor-pointer p-3 rounded-lg border transition-all duration-200 ease-in-out"
         :class="[
           modelValue === option.value 
-            ? 'bg-indigo-50 border-indigo-200 ring-1 ring-indigo-200 shadow-sm' 
-            : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+            ? 'bg-primary/5 border-primary/20 ring-1 ring-primary/20 shadow-sm' 
+            : 'bg-white border-secondary/20 hover:border-secondary/40 hover:bg-light'
         ]"
       >
         <input 
@@ -44,19 +44,19 @@ const groupName = computed(() => props.name || `radio-group-${Math.random().toSt
           :value="option.value"
           :checked="modelValue === option.value"
           @change="$emit('update:modelValue', option.value)"
-          class="h-4 w-4 text-indigo-600 border-gray-300"
+          class="h-4 w-4 text-primary border-secondary/30"
         >
         <div class="ml-3">
           <span 
             class="block text-sm font-medium"
-            :class="[modelValue === option.value ? 'text-indigo-900' : 'text-gray-900']"
+            :class="[modelValue === option.value ? 'text-primary' : 'text-dark']"
           >
             {{ option.label }}
           </span>
           <span 
             v-if="option.description" 
             class="block text-xs mt-0.5"
-            :class="[modelValue === option.value ? 'text-indigo-700' : 'text-gray-500']"
+            :class="[modelValue === option.value ? 'text-primary/80' : 'text-secondary']"
           >
             {{ option.description }}
           </span>

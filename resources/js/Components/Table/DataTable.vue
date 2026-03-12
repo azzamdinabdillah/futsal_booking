@@ -48,7 +48,7 @@ const table = useVueTable({
 </script>
 
 <template>
-  <div v-if="enableSearch" class="p-4 bg-white border-b border-gray-200">
+  <div v-if="enableSearch" class="p-4 bg-white border-b border-secondary/20">
     <div class="relative max-w-sm">
       <TextInput
         v-model="globalFilter"
@@ -56,7 +56,7 @@ const table = useVueTable({
         class="mb-0"
       >
         <template #prefix>
-          <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+          <svg class="w-4 h-4 text-secondary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
           </svg>
         </template>
@@ -85,7 +85,7 @@ const table = useVueTable({
         </Td>
       </Tr>
       <Tr v-if="table.getRowModel().rows.length === 0">
-        <Td :colspan="columns.length" class="text-center text-gray-500">
+        <Td :colspan="columns.length" class="text-center text-secondary">
           No results.
         </Td>
       </Tr>

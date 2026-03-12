@@ -32,7 +32,7 @@ import { Link } from '@inertiajs/vue3';
 
                         <Link
                             href="/register"
-                            class="text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md transition-colors"
+                            class="text-sm font-medium text-white bg-primary hover:opacity-90 px-4 py-2 rounded-md transition-colors"
                         >
                             Daftar
                         </Link>

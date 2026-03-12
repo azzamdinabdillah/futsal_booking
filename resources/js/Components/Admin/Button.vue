@@ -27,18 +27,18 @@ const baseClasses = computed(() => {
 const variantClasses = computed(() => {
     switch (props.variant) {
         case 'secondary':
-            return 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-gray-500';
+            return 'bg-secondary text-white hover:opacity-90 focus:ring-secondary border border-transparent';
         case 'danger':
-            return 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 border border-transparent';
+            return 'bg-danger text-white hover:opacity-90 focus:ring-danger border border-transparent';
         case 'warning':
-            return 'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-500 border border-transparent';
+            return 'bg-warning text-white hover:opacity-90 focus:ring-warning border border-transparent';
         case 'info':
-            return 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500 border border-transparent';
+            return 'bg-info text-white hover:opacity-90 focus:ring-info border border-transparent';
         case 'success':
-            return 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 border border-transparent';
+            return 'bg-success text-white hover:opacity-90 focus:ring-success border border-transparent';
         case 'primary':
         default:
-            return 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 border border-transparent';
+            return 'bg-primary text-white hover:opacity-90 focus:ring-primary border border-transparent';
     }
 });
 

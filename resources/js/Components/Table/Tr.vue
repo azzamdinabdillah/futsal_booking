@@ -1,5 +1,5 @@
 <template>
-    <tr class="hover:bg-gray-50 transition-colors duration-150">
+    <tr class="hover:bg-light transition-colors duration-150">
         <slot />
     </tr>
 </template>

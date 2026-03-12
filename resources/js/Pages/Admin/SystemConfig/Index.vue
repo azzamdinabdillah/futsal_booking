@@ -64,6 +64,12 @@ const submitEdit = () => {
   
   form.post(`/admin/system-config/${editingConfig.value.id}`, {
     onSuccess: () => {
+      // Update CSS variable immediately if it's a color config
+      if (editingConfig.value?.key.startsWith('color_')) {
+        const cssVar = '--' + editingConfig.value.key.replace('_', '-')
+        document.documentElement.style.setProperty(cssVar, form.value)
+      }
+      
       closeEditModal()
       toast.success("Konfigurasi berhasil diperbarui")
     },
@@ -102,7 +108,7 @@ const columns = [
 
 <template>
   <Head title="System Configuration" />
-  <div class="flex h-screen bg-gray-100">
+  <div class="flex h-screen bg-light">
     <!-- Sidebar -->
     <Sidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
 
@@ -114,25 +120,25 @@ const columns = [
           <!-- Hamburger Button -->
           <button 
             @click="isSidebarOpen = !isSidebarOpen" 
-            class="mr-4 text-gray-600 hover:text-gray-900 focus:outline-none md:hidden"
+            class="mr-4 text-secondary hover:text-dark focus:outline-none md:hidden"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <h2 class="text-xl font-semibold text-gray-800">System Configuration</h2>
+          <h2 class="text-xl font-semibold text-dark">System Configuration</h2>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="text-gray-600 hidden sm:inline">Admin User</span>
-          <div class="w-8 h-8 bg-gray-300 rounded-full"></div>
+          <span class="text-secondary hidden sm:inline">Admin User</span>
+          <div class="w-8 h-8 bg-secondary/20 rounded-full"></div>
         </div>
       </header>
 
       <!-- Content -->
       <div class="p-4 md:p-6">
         <div class="bg-white rounded-lg shadow overflow-hidden">
-          <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h3 class="text-lg font-semibold text-gray-800">Configuration List</h3>
+          <div class="px-6 py-4 border-b border-secondary/20 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-dark">Configuration List</h3>
             <!-- Add button could go here if needed -->
           </div>
           
@@ -174,17 +180,17 @@ const columns = [
       />
 
       <div v-else>
-        <label for="color-value" class="block text-sm font-semibold text-gray-700 mb-1.5">Value</label>
+        <label for="color-value" class="block text-sm font-semibold text-dark mb-1.5">Value</label>
         <div class="flex items-center space-x-3">
           <input 
             type="color" 
             id="color-value" 
             v-model="form.value"
-            class="h-10 w-20 p-1 border border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors shadow-sm"
+            class="h-10 w-20 p-1 border border-secondary/30 rounded-lg cursor-pointer hover:border-secondary transition-colors shadow-sm"
           >
-          <span class="text-gray-700 font-mono bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 text-sm shadow-sm">{{ form.value }}</span>
+          <span class="text-dark font-mono bg-light px-3 py-2 rounded-lg border border-secondary/20 text-sm shadow-sm">{{ form.value }}</span>
         </div>
-        <p v-if="form.errors.value" class="mt-2 text-sm text-red-600 flex items-center animate-in fade-in slide-in-from-top-1 duration-200">
+        <p v-if="form.errors.value" class="mt-2 text-sm text-danger flex items-center animate-in fade-in slide-in-from-top-1 duration-200">
             <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>

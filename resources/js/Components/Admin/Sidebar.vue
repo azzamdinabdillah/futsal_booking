@@ -29,10 +29,10 @@ const isActive = (path: string) => {
 
   <!-- Sidebar -->
   <aside 
-    class="fixed inset-y-0 left-0 z-40 w-64 bg-gray-800 text-white transition-transform duration-300 ease-in-out md:relative md:translate-x-0 flex flex-col"
+    class="fixed inset-y-0 left-0 z-40 w-64 bg-primary text-white transition-transform duration-300 ease-in-out md:relative md:translate-x-0 flex flex-col"
     :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
   >
-    <div class="p-4 text-2xl font-bold border-b border-gray-700 flex justify-between items-center">
+    <div class="p-4 text-2xl font-bold border-b border-white/10 flex justify-between items-center">
       <span>Admin Panel</span>
       <!-- Mobile Close Button -->
       <button @click="emit('close')" class="md:hidden text-gray-400 hover:text-white focus:outline-none">
@@ -45,34 +45,34 @@ const isActive = (path: string) => {
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
       <Link 
         href="/admin" 
-        class="block px-4 py-2 rounded hover:bg-gray-700" 
-        :class="{ 'bg-gray-700': isActive('/admin') }"
+        class="block px-4 py-2 rounded hover:bg-white/10" 
+        :class="{ 'bg-white/20': isActive('/admin') }"
         @click="emit('close')"
       >
         Dashboard
       </Link>
       <a 
         href="#" 
-        class="block px-4 py-2 rounded hover:bg-gray-700" 
-        :class="{ 'bg-gray-700': isActive('#') }"
+        class="block px-4 py-2 rounded hover:bg-white/10" 
+        :class="{ 'bg-white/20': isActive('#') }"
         @click="emit('close')"
       >
         Users
       </a>
       <Link 
         href="/admin/system-config" 
-        class="block px-4 py-2 rounded hover:bg-gray-700" 
-        :class="{ 'bg-gray-700': isActive('/admin/system-config') }"
+        class="block px-4 py-2 rounded hover:bg-white/10" 
+        :class="{ 'bg-white/20': isActive('/admin/system-config') }"
         @click="emit('close')"
       >
         System Config
       </Link>
-      <Link href="/" class="block px-4 py-2 rounded hover:bg-gray-700 text-red-300">
+      <Link href="/" class="block px-4 py-2 rounded hover:bg-white/10 text-red-300">
         Logout / Home
       </Link>
     </nav>
     
-    <div class="p-4 border-t border-gray-700 text-sm text-gray-400">
+    <div class="p-4 border-t border-white/10 text-sm text-gray-400">
       &copy; 2024 Futsal Booking
     </div>
   </aside>
