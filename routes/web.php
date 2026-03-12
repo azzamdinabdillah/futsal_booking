@@ -5,9 +5,18 @@ use Inertia\Inertia;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\SystemConfigController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
-Route::get('/admin/system-config', [SystemConfigController::class, 'index'])->name('admin.system-config.index');
-Route::post('/admin/system-config/{id}', [SystemConfigController::class, 'update'])->name('admin.system-config.update');
+
+// Admin Auth
+Route::get('/admin/login', [AuthController::class, 'create'])->name('admin.login');
+Route::post('/admin/login', [AuthController::class, 'store'])->name('admin.login.store');
+Route::post('/admin/logout', [AuthController::class, 'destroy'])->name('admin.logout');
+
+Route::middleware('auth:admin')->prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/system-config', [SystemConfigController::class, 'index'])->name('admin.system-config.index');
+    Route::post('/system-config/{id}', [SystemConfigController::class, 'update'])->name('admin.system-config.update');
+});
