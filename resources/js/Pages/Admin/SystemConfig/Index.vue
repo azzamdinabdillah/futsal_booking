@@ -136,80 +136,63 @@ const columns = [
     </main>
 
     <!-- Edit Modal -->
-    <Modal :show="isEditModalOpen" @close="closeEditModal">
-      <div class="p-6 bg-white rounded-lg">
-        <h2 class="text-lg font-medium text-gray-900 mb-4">
-          Edit Configuration: <span class="font-bold">{{ editingConfig?.key }}</span>
-        </h2>
-        
-        <form @submit.prevent="submitEdit">
-          <!-- Input Type Selector -->
-          <RadioGroup 
-            v-if="editingConfig?.key.toLowerCase().startsWith('color')"
-            v-model="inputType" 
-            label="Input Type" 
-            :options="[
-              { label: 'Text', value: 'text' },
-              { label: 'Color Picker', value: 'color' }
-            ]" 
-            :inline="true"
-          />
+    <Modal
+      :show="isEditModalOpen"
+      title="Edit Configuration"
+      :subtitle="editingConfig?.key"
+      :loading="form.processing"
+      :show-footer="true"
+      max-width="xl"
+      @close="closeEditModal"
+      @submit="submitEdit"
+    >
+      <!-- Input Type Selector -->
+      <RadioGroup 
+        v-if="editingConfig?.key.toLowerCase().startsWith('color')"
+        v-model="inputType" 
+        label="Input Type" 
+        :options="[
+          { label: 'Text', value: 'text' },
+          { label: 'Color Picker', value: 'color' }
+        ]" 
+        :inline="true"
+      />
 
-          <TextInput
-            v-if="inputType === 'text'"
-            id="value"
+      <TextInput
+        v-if="inputType === 'text'"
+        id="value"
+        v-model="form.value"
+        label="Value"
+        :error="form.errors.value"
+        required
+      />
+
+      <div v-else>
+        <label for="color-value" class="block text-sm font-semibold text-gray-700 mb-1.5">Value</label>
+        <div class="flex items-center space-x-3">
+          <input 
+            type="color" 
+            id="color-value" 
             v-model="form.value"
-            label="Value"
-            :error="form.errors.value"
-            required
-          />
-
-          <div v-else class="mb-5">
-            <label for="color-value" class="block text-sm font-semibold text-gray-700 mb-1.5">Value</label>
-            <div class="flex items-center space-x-3">
-              <input 
-                type="color" 
-                id="color-value" 
-                v-model="form.value"
-                class="h-10 w-20 p-1 border border-gray-300 rounded-md cursor-pointer"
-              >
-              <span class="text-gray-700 font-mono bg-gray-100 px-2 py-1 rounded border border-gray-200">{{ form.value }}</span>
-            </div>
-            <p v-if="form.errors.value" class="mt-2 text-sm text-red-600 flex items-center animate-in fade-in slide-in-from-top-1 duration-200">
-                <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {{ form.errors.value }}
-            </p>
-          </div>
-
-          <TextArea
-            id="description"
-            v-model="form.description"
-            label="Description"
-            :rows="3"
-            :error="form.errors.description"
-          />
-
-          <div class="flex justify-end space-x-3">
-            <Button 
-              type="button" 
-              variant="secondary"
-              @click="closeEditModal"
-            >
-              Cancel
-            </Button>
-            <Button 
-              type="submit" 
-              variant="primary"
-              :disabled="form.processing"
-              :loading="form.processing"
-            >
-              Save Changes
-            </Button>
-          </div>
-        </form>
+            class="h-10 w-20 p-1 border border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors shadow-sm"
+          >
+          <span class="text-gray-700 font-mono bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 text-sm shadow-sm">{{ form.value }}</span>
+        </div>
+        <p v-if="form.errors.value" class="mt-2 text-sm text-red-600 flex items-center animate-in fade-in slide-in-from-top-1 duration-200">
+            <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {{ form.errors.value }}
+        </p>
       </div>
+
+      <TextArea
+        id="description"
+        v-model="form.description"
+        label="Description"
+        :rows="3"
+        :error="form.errors.description"
+      />
     </Modal>
   </div>
 </template>

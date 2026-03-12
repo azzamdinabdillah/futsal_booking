@@ -1,18 +1,34 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, watch } from 'vue';
+import Button from '@/Components/Admin/Button.vue';
 
 const props = withDefaults(
     defineProps<{
         show?: boolean;
         closeable?: boolean;
+        maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+        // Form props
+        title?: string;
+        subtitle?: string;
+        submitText?: string;
+        cancelText?: string;
+        loading?: boolean;
+        showFooter?: boolean;
     }>(),
     {
         show: false,
         closeable: true,
+        maxWidth: '2xl',
+        title: '',
+        subtitle: '',
+        submitText: 'Save Changes',
+        cancelText: 'Cancel',
+        loading: false,
+        showFooter: false,
     }
 );
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'submit']);
 
 watch(
     () => props.show,
@@ -31,11 +47,23 @@ const close = () => {
     }
 };
 
+const submit = () => {
+    emit('submit');
+};
+
 const closeOnEscape = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && props.show) {
         close();
     }
 };
+
+const maxWidthClass = {
+    sm: 'sm:max-w-sm',
+    md: 'sm:max-w-md',
+    lg: 'sm:max-w-lg',
+    xl: 'sm:max-w-xl',
+    '2xl': 'sm:max-w-2xl',
+}[props.maxWidth];
 
 onMounted(() => document.addEventListener('keydown', closeOnEscape));
 
@@ -56,7 +84,7 @@ onUnmounted(() => {
                 leave-from-class="opacity-100"
                 leave-to-class="opacity-0"
             >
-                <div v-show="show" class="fixed inset-0 bg-black/40 bg-opacity-75 transition-opacity" @click="close" />
+                <div v-show="show" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity" @click="close" />
             </transition>
 
             <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -71,9 +99,46 @@ onUnmounted(() => {
                     >
                         <div
                             v-show="show"
-                            class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 w-full sm:max-w-2xl"
+                            class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full border border-gray-100"
+                            :class="maxWidthClass"
                         >
-                            <slot v-if="show" />
+                            <form v-if="title || showFooter" @submit.prevent="submit" class="flex flex-col h-full">
+                                <!-- Header -->
+                                <div v-if="title" class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                                    <h2 class="text-lg font-semibold text-gray-900">
+                                        {{ title }}
+                                    </h2>
+                                    <div v-if="subtitle" class="text-xs font-mono text-gray-500 bg-white px-2 py-1 rounded border border-gray-200 shadow-sm">
+                                        {{ subtitle }}
+                                    </div>
+                                </div>
+                                
+                                <!-- Body -->
+                                <div class="p-6 space-y-5">
+                                    <slot />
+                                </div>
+
+                                <!-- Footer -->
+                                <div v-if="showFooter" class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end space-x-3">
+                                    <Button 
+                                        type="button" 
+                                        variant="secondary"
+                                        @click="close"
+                                    >
+                                        {{ cancelText }}
+                                    </Button>
+                                    <Button 
+                                        type="submit" 
+                                        variant="primary"
+                                        :disabled="loading"
+                                        :loading="loading"
+                                    >
+                                        {{ submitText }}
+                                    </Button>
+                                </div>
+                            </form>
+                            
+                            <slot v-else />
                         </div>
                     </transition>
                 </div>

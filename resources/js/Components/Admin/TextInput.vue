@@ -30,7 +30,7 @@ const handleInput = (event: Event) => {
 </script>
 
 <template>
-    <div class="mb-5">
+    <div class="">
         <label v-if="label" :for="inputId" class="block text-sm font-semibold text-gray-700 mb-1.5">
             {{ label }} <span v-if="required" class="text-indigo-600">*</span>
         </label>
