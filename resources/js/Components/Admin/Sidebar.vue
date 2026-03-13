@@ -67,7 +67,7 @@ const isActive = (path: string) => {
       >
         System Config
       </Link>
-      <Link href="/" class="block px-4 py-2 rounded hover:bg-white/10 text-red-300">
+      <Link href="/admin/logout" method="post" as="button" class="block w-full text-left px-4 py-2 rounded hover:bg-white/10 text-red-300">
         Logout / Home
       </Link>
     </nav>

@@ -4,6 +4,8 @@ import TextInput from "@/Components/Admin/TextInput.vue";
 import Button from "@/Components/Admin/Button.vue";
 import Checkbox from "@/Components/Admin/Checkbox.vue";
 import { Mail, Lock } from "lucide-vue-next";
+import { useToast } from "vue-toastification";
+import { error } from "node:console";
 
 const form = useForm({
     email: "",
@@ -11,9 +13,21 @@ const form = useForm({
     remember: false,
 });
 
+const toast = useToast();
+
 const submit = () => {
     form.post("/admin/login", {
         onFinish: () => form.reset("password"),
+        onSuccess: () => toast.success("Login successful"),
+        onError: (errors) => {
+            if (errors.email) {
+                toast.error(errors.email);
+            } else if (errors.password) {
+                toast.error(errors.password);
+            } else {
+                toast.error("Login failed. Please check your credentials.");
+            }
+        },
     });
 };
 </script>
