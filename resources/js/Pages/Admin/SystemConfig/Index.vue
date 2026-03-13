@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import Sidebar from '@/Components/Admin/Sidebar.vue'
 import { Head, useForm, usePage } from '@inertiajs/vue3'
+import AdminLayout from '@/Layouts/AdminLayout.vue'
 import DataTable from '@/Components/Table/DataTable.vue'
 import { createColumnHelper } from '@tanstack/vue-table'
 import Modal from '@/Components/Modal.vue'
@@ -22,7 +22,6 @@ const props = defineProps<{
   configs: Config[]
 }>()
 
-const isSidebarOpen = ref(false)
 const isEditModalOpen = ref(false)
 const editingConfig = ref<Config | null>(null)
 const inputType = ref<'text' | 'color'>('text')
@@ -108,44 +107,19 @@ const columns = [
 
 <template>
   <Head title="System Configuration" />
-  <div class="flex h-screen bg-light">
-    <!-- Sidebar -->
-    <Sidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
-
-    <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto flex flex-col w-full">
-      <!-- Header -->
-      <header class="bg-white shadow p-4 flex justify-between items-center sticky top-0 z-10">
-        <div class="flex items-center">
-          <!-- Hamburger Button -->
-          <button 
-            @click="isSidebarOpen = !isSidebarOpen" 
-            class="mr-4 text-secondary hover:text-dark focus:outline-none md:hidden"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <h2 class="text-xl font-semibold text-dark">System Configuration</h2>
+  
+  <AdminLayout title="System Configuration">
+    <!-- Content -->
+    <div class="p-4 md:p-6">
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="px-6 py-4 border-b border-secondary/20 flex justify-between items-center">
+          <h3 class="text-lg font-semibold text-dark">Configuration List</h3>
+          <!-- Add button could go here if needed -->
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="text-secondary hidden sm:inline">Admin User</span>
-          <div class="w-8 h-8 bg-secondary/20 rounded-full"></div>
-        </div>
-      </header>
-
-      <!-- Content -->
-      <div class="p-4 md:p-6">
-        <div class="bg-white rounded-lg shadow overflow-hidden">
-          <div class="px-6 py-4 border-b border-secondary/20 flex justify-between items-center">
-            <h3 class="text-lg font-semibold text-dark">Configuration List</h3>
-            <!-- Add button could go here if needed -->
-          </div>
-          
-          <DataTable :columns="columns" :data="configs" />
-        </div>
+        
+        <DataTable :columns="columns" :data="configs" />
       </div>
-    </main>
+    </div>
 
     <!-- Edit Modal -->
     <Modal
@@ -206,5 +180,5 @@ const columns = [
         :error="form.errors.description"
       />
     </Modal>
-  </div>
+  </AdminLayout>
 </template>

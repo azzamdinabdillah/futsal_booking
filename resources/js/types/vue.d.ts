@@ -6,7 +6,8 @@ declare module '@vue/runtime-core' {
             auth: {
                 user: {
                     id: number;
-                    name: string;
+                    name?: string;
+                    full_name?: string;
                     email: string;
                 } | null;
             };
