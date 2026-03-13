@@ -51,6 +51,14 @@ const isActive = (path: string) => {
       >
         Dashboard
       </Link>
+      <Link 
+        href="/admin/fields" 
+        class="block px-4 py-2 rounded hover:bg-white/10" 
+        :class="{ 'bg-white/20': isActive('/admin/fields') }"
+        @click="emit('close')"
+      >
+        Manajemen Lapangan
+      </Link>
       <a 
         href="#" 
         class="block px-4 py-2 rounded hover:bg-white/10" 
