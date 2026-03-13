@@ -10,13 +10,7 @@ import TextInput from '@/Components/Admin/TextInput.vue'
 import TextArea from '@/Components/Admin/TextArea.vue'
 import RadioGroup from '@/Components/Admin/RadioGroup.vue'
 import { useToast } from "vue-toastification"
-
-type Config = {
-  id: number
-  key: string
-  value: string
-  description: string
-}
+import { Config } from '@/types/system-config'
 
 const props = defineProps<{
   configs: Config[]

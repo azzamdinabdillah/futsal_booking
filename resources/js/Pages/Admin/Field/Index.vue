@@ -1,36 +1,27 @@
 <script setup lang="ts">
-import { h } from 'vue'
+import { h, ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import DataTable from '@/Components/Table/DataTable.vue'
 import { createColumnHelper } from '@tanstack/vue-table'
-
-// Define the Field type based on the model
-type FieldPhoto = {
-    id: number
-    field_id: number
-    photo_url: string
-    sort_order: number
-}
-
-type Field = {
-    id: number
-    name: string
-    price_per_hour: number
-    length_m: number
-    width_m: number
-    surface_type: string
-    roof_type: string
-    player_capacity: string
-    description: string
-    status: string
-    inactive_reason: string | null
-    photos: FieldPhoto[]
-}
+import { Field, FieldPhoto } from '@/types/field'
+import VueEasyLightbox from 'vue-easy-lightbox'
 
 const props = defineProps<{
     fields: Field[]
 }>()
+
+const visibleRef = ref(false)
+const indexRef = ref(0)
+const imgsRef = ref<string[]>([])
+
+const showImg = (index: number, photos: FieldPhoto[]) => {
+    imgsRef.value = photos.map(photo => '/' + photo.photo_url)
+    indexRef.value = index
+    visibleRef.value = true
+}
+
+const onHide = () => visibleRef.value = false
 
 const columnHelper = createColumnHelper<Field>()
 
@@ -74,10 +65,11 @@ const columns = [
             const photos = info.getValue()
             if (photos && photos.length > 0) {
                 return h('div', { class: 'flex space-x-1' }, 
-                    photos.map(photo => h('img', { 
+                    photos.map((photo, index) => h('img', { 
                         src: '/' + photo.photo_url, 
                         alt: 'Field Photo',
-                        class: 'w-10 h-10 object-cover rounded border border-gray-200'
+                        class: 'w-10 h-10 object-cover rounded border border-gray-200 cursor-pointer hover:opacity-80 transition',
+                        onClick: () => showImg(index, photos)
                     }))
                 )
             }
@@ -100,5 +92,20 @@ const columns = [
                 <DataTable :columns="columns" :data="fields" />
             </div>
         </div>
+
+        <VueEasyLightbox
+            :visible="visibleRef"
+            :imgs="imgsRef"
+            :index="indexRef"
+            @hide="onHide"
+            :loop="true"
+        />
     </AdminLayout>
 </template>
+
+<style scoped>
+:deep(.vel-modal) {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+}
+</style>
