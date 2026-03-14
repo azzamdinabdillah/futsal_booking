@@ -84,7 +84,7 @@ onUnmounted(() => {
                 leave-from-class="opacity-100"
                 leave-to-class="opacity-0"
             >
-                <div v-show="show" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity" @click="close" />
+                <div v-show="show" class="fixed inset-0 bg-dark/50 backdrop-blur-sm transition-opacity" @click="close" />
             </transition>
 
             <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -99,16 +99,16 @@ onUnmounted(() => {
                     >
                         <div
                             v-show="show"
-                            class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full border border-gray-100"
+                            class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full border border-secondary/20"
                             :class="maxWidthClass"
                         >
                             <form v-if="title || showFooter" @submit.prevent="submit" class="flex flex-col h-full">
                                 <!-- Header -->
-                                <div v-if="title" class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                                    <h2 class="text-lg font-semibold text-gray-900">
+                                <div v-if="title" class="px-6 py-4 border-b border-secondary/20 flex items-center justify-between bg-light/50">
+                                    <h2 class="text-lg font-semibold text-dark">
                                         {{ title }}
                                     </h2>
-                                    <div v-if="subtitle" class="text-xs font-mono text-gray-500 bg-white px-2 py-1 rounded border border-gray-200 shadow-sm">
+                                    <div v-if="subtitle" class="text-xs font-mono text-secondary bg-white px-2 py-1 rounded border border-secondary/20 shadow-sm">
                                         {{ subtitle }}
                                     </div>
                                 </div>
@@ -119,7 +119,7 @@ onUnmounted(() => {
                                 </div>
 
                                 <!-- Footer -->
-                                <div v-if="showFooter" class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end space-x-3">
+                                <div v-if="showFooter" class="px-6 py-4 bg-light border-t border-secondary/20 flex justify-end space-x-3">
                                     <Button 
                                         type="button" 
                                         variant="secondary"

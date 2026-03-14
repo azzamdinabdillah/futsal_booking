@@ -9,9 +9,9 @@ import Button from '@/Components/Admin/Button.vue'
 
 const form = useForm({
     name: '',
-    price_per_hour: 0,
-    length_m: 0,
-    width_m: 0,
+    price_per_hour: '',
+    length_m: '',
+    width_m: '',
     surface_type: '',
     roof_type: '',
     player_capacity: '',
@@ -179,7 +179,7 @@ const statusOptions = [
                         label="Deskripsi"
                         placeholder="Deskripsi tambahan mengenai lapangan..."
                         :error="form.errors.description"
-                        rows="4"
+                        :rows=4
                     />
 
                     <div>

@@ -51,7 +51,7 @@ class SystemConfigSeeder extends Seeder
             // Color Palette
             [
                 'key' => 'color_primary',
-                'value' => '#0F172A', // Slate 900
+                'value' => '#059669', // Slate 900
                 'description' => 'Warna utama aplikasi (Primary)',
             ],
             [
@@ -61,7 +61,7 @@ class SystemConfigSeeder extends Seeder
             ],
             [
                 'key' => 'color_success',
-                'value' => '#22C55E', // Green 500
+                'value' => '#10B981', // Green 500
                 'description' => 'Warna indikator sukses',
             ],
             [
@@ -76,7 +76,7 @@ class SystemConfigSeeder extends Seeder
             ],
             [
                 'key' => 'color_info',
-                'value' => '#3B82F6', // Blue 500
+                'value' => '#0EA5E9', // Blue 500
                 'description' => 'Warna indikator informasi',
             ],
             [
@@ -86,7 +86,7 @@ class SystemConfigSeeder extends Seeder
             ],
             [
                 'key' => 'color_dark',
-                'value' => '#020617', // Slate 950
+                'value' => '#0F172A', // Slate 950
                 'description' => 'Warna latar gelap/teks',
             ],
         ];

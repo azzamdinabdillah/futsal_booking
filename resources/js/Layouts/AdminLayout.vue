@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Head, usePage } from '@inertiajs/vue3'
+import { Head, usePage, Link } from '@inertiajs/vue3'
 import Sidebar from '@/Components/Admin/Sidebar.vue'
+import { 
+  Menu, 
+  LogOut
+} from 'lucide-vue-next'
 
 defineProps<{
   title?: string
@@ -9,34 +13,58 @@ defineProps<{
 
 const isSidebarOpen = ref(false)
 const page = usePage()
+
+const userInitials = computed(() => {
+  const name = page.props.auth.user?.full_name || 'Admin'
+  return name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()
+})
 const flashSuccess = computed(() => page.props.flash.success)
 const flashError = computed(() => page.props.flash.error)
 </script>
 
 <template>
-  <div class="flex h-screen bg-light">
+  <div class="flex h-screen bg-gray-50/50">
     <!-- Sidebar -->
     <Sidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
 
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto flex flex-col w-full">
       <!-- Header -->
-      <header class="bg-white shadow p-4 flex justify-between items-center sticky top-0 z-10">
-        <div class="flex items-center">
+      <header class="bg-primary border-b border-white/10 py-3 flex justify-between items-center sticky top-0 z-20 px-4 sm:px-8 transition-all duration-200 shadow-md">
+        <div class="flex items-center gap-4">
           <!-- Hamburger Button -->
           <button 
             @click="isSidebarOpen = !isSidebarOpen" 
-            class="mr-4 text-secondary hover:text-dark focus:outline-none md:hidden"
+            class="p-2 -ml-2 text-white/70 hover:text-white focus:outline-none md:hidden rounded-lg hover:bg-white/10 transition-all duration-200"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <Menu class="w-6 h-6" />
           </button>
-          <h2 v-if="title" class="text-xl font-semibold text-dark">{{ title }}</h2>
+          
+          <h2 v-if="title" class="text-2xl font-bold text-white tracking-tight">{{ title }}</h2>
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="text-secondary hidden sm:inline">{{ $page.props.auth.user?.full_name }}</span>
-          <div class="w-8 h-8 bg-secondary/20 rounded-full"></div>
+
+        <div class="flex items-center gap-4">
+          <!-- User Info -->
+          <div class="flex items-center gap-3 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">
+            <div class="h-9 w-9 rounded-lg bg-white/20 text-white flex items-center justify-center font-bold text-sm shadow-sm ring-1 ring-white/20 backdrop-blur-sm">
+              {{ userInitials }}
+            </div>
+            <div class="hidden sm:block">
+              <div class="text-sm font-bold text-white leading-none mb-0.5">{{ $page.props.auth.user?.full_name }}</div>
+              <div class="text-[10px] text-white/60 font-medium uppercase tracking-wider">Administrator</div>
+            </div>
+          </div>
+
+          <!-- Logout Button -->
+          <Link 
+            href="/admin/logout" 
+            method="post" 
+            as="button" 
+            class="p-2.5 text-white/70 hover:text-red-200 hover:bg-red-500/20 rounded-xl transition-all duration-200 border border-transparent hover:border-red-500/30 focus:outline-none group"
+            title="Sign Out"
+          >
+            <LogOut class="w-5 h-5 group-hover:scale-110 transition-transform" />
+          </Link>
         </div>
       </header>
 
