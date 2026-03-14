@@ -48,7 +48,7 @@ const handleInput = (event: Event) => {
                 :disabled="disabled"
                 :autofocus="autofocus"
                 :autocomplete="autocomplete"
-                class="block w-full rounded-lg border-0 outline-0 py-2.5 text-dark ring-1 ring-inset ring-secondary/30 placeholder:text-secondary/50 focus:ring-2 focus:ring-inset focus:ring-primary hover:ring-secondary/50 sm:text-sm sm:leading-6 transition-all duration-200 ease-in-out bg-white disabled:cursor-not-allowed disabled:bg-light disabled:text-secondary disabled:ring-secondary/20"
+                class="block w-full rounded-lg border-0 outline-0 py-2.5 px-3.5 text-dark ring-1 ring-inset ring-secondary/30 placeholder:text-secondary/50 focus:ring-2 focus:ring-inset focus:ring-primary hover:ring-secondary/50 sm:text-sm sm:leading-6 transition-all duration-200 ease-in-out bg-white disabled:cursor-not-allowed disabled:bg-light disabled:text-secondary disabled:ring-secondary/20"
                 :class="[
                     { 'pl-10': hasPrefix },
                     { 'pl-3.5': !hasPrefix },
