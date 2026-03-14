@@ -25,4 +25,7 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
     Route::get('/fields', [FieldController::class, 'index'])->name('admin.fields.index');
     Route::get('/fields/create', [FieldController::class, 'create'])->name('admin.fields.create');
     Route::post('/fields', [FieldController::class, 'store'])->name('admin.fields.store');
+    Route::get('/fields/{field}/edit', [FieldController::class, 'edit'])->name('admin.fields.edit');
+    Route::put('/fields/{field}', [FieldController::class, 'update'])->name('admin.fields.update');
+    Route::delete('/fields/{field}', [FieldController::class, 'destroy'])->name('admin.fields.destroy');
 });

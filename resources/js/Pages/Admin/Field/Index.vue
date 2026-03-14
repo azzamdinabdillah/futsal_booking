@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { h, ref } from 'vue'
-import { Head, Link } from '@inertiajs/vue3'
+import { Head, Link, router } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import DataTable from '@/Components/Table/DataTable.vue'
 import { createColumnHelper } from '@tanstack/vue-table'
@@ -79,17 +79,43 @@ const columns = [
         cell: info => {
             const photos = info.getValue()
             if (photos && photos.length > 0) {
-                return h('div', { class: 'flex space-x-1' }, 
-                    photos.map((photo, index) => h('img', { 
+                const maxPhotos = 2
+                const displayPhotos = photos.slice(0, maxPhotos)
+                const remaining = photos.length - maxPhotos
+
+                return h('div', { class: 'flex items-center space-x-1 min-w-[100px]' }, [
+                    ...displayPhotos.map((photo, index) => h('img', { 
                         src: '/' + photo.photo_url, 
                         alt: 'Field Photo',
-                        class: 'w-10 h-10 object-cover rounded border border-gray-200 cursor-pointer hover:opacity-80 transition',
+                        class: 'w-10 h-10 object-cover rounded border border-gray-200 cursor-pointer hover:opacity-80 transition flex-shrink-0',
                         onClick: () => showImg(index, photos)
-                    }))
-                )
+                    })),
+                    remaining > 0 ? h('div', {
+                        class: 'w-10 h-10 flex items-center justify-center bg-gray-100 rounded border border-gray-200 text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-200 transition flex-shrink-0',
+                        onClick: () => showImg(maxPhotos, photos)
+                    }, `+${remaining}`) : null
+                ])
             }
             return h('span', { class: 'text-gray-400 italic' }, 'Tidak ada foto')
         }
+    }),
+    columnHelper.display({
+        id: 'actions',
+        header: 'Aksi',
+        cell: ({ row }) => h('div', { class: 'flex space-x-2' }, [
+            h(Link, {
+                href: `/admin/fields/${row.original.id}/edit`,
+                class: 'text-blue-600 hover:text-blue-800 font-medium text-sm'
+            }, () => 'Ubah'),
+            h('button', {
+                class: 'text-red-600 hover:text-red-800 font-medium text-sm',
+                onClick: () => {
+                    if (confirm('Apakah Anda yakin ingin menghapus lapangan ini?')) {
+                        router.delete(`/admin/fields/${row.original.id}`)
+                    }
+                }
+            }, 'Hapus')
+        ]),
     }),
 ]
 </script>
