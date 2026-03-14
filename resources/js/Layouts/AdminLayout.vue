@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { ref, computed } from 'vue'
+import { Head, usePage } from '@inertiajs/vue3'
 import Sidebar from '@/Components/Admin/Sidebar.vue'
 
 defineProps<{
@@ -8,6 +8,9 @@ defineProps<{
 }>()
 
 const isSidebarOpen = ref(false)
+const page = usePage()
+const flashSuccess = computed(() => page.props.flash.success)
+const flashError = computed(() => page.props.flash.error)
 </script>
 
 <template>
@@ -36,6 +39,14 @@ const isSidebarOpen = ref(false)
           <div class="w-8 h-8 bg-secondary/20 rounded-full"></div>
         </div>
       </header>
+
+      <!-- Flash Messages -->
+      <div v-if="flashSuccess" class="mx-4 mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+        <span class="block sm:inline">{{ flashSuccess }}</span>
+      </div>
+      <div v-if="flashError" class="mx-4 mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <span class="block sm:inline">{{ flashError }}</span>
+      </div>
 
       <!-- Content -->
       <slot />

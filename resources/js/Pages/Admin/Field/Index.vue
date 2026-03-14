@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { h, ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { Head, Link } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import DataTable from '@/Components/Table/DataTable.vue'
 import { createColumnHelper } from '@tanstack/vue-table'
@@ -44,11 +44,26 @@ const columns = [
     }),
     columnHelper.accessor('status', {
         header: 'Status',
-        cell: info => h('span', {
-            class: `px-2 py-1 rounded-full text-xs font-semibold ${
-                info.getValue() === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-            }`
-        }, info.getValue() === 'active' ? 'Aktif' : 'Tidak Aktif'),
+        cell: info => {
+            const status = info.getValue()
+            let colorClass = 'bg-gray-100 text-gray-800'
+            let label = status
+
+            if (status === 'active') {
+                colorClass = 'bg-green-100 text-green-800'
+                label = 'Aktif'
+            } else if (status === 'maintenance') {
+                colorClass = 'bg-yellow-100 text-yellow-800'
+                label = 'Perbaikan'
+            } else if (status === 'inactive') {
+                colorClass = 'bg-red-100 text-red-800'
+                label = 'Tidak Aktif'
+            }
+
+            return h('span', {
+                class: `px-2 py-1 rounded-full text-xs font-semibold ${colorClass}`
+            }, label)
+        },
     }),
     columnHelper.display({
         id: 'dimensions',
@@ -87,6 +102,9 @@ const columns = [
             <div class="bg-white rounded-lg shadow overflow-hidden">
                 <div class="px-6 py-4 border-b border-secondary/20 flex justify-between items-center">
                     <h3 class="text-lg font-semibold text-dark">Daftar Lapangan</h3>
+                    <Link href="/admin/fields/create" class="bg-primary text-white hover:opacity-90 px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                        + Tambah Lapangan
+                    </Link>
                 </div>
                 
                 <DataTable :columns="columns" :data="fields" />
