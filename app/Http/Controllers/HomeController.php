@@ -26,8 +26,6 @@ class HomeController extends Controller
             return [
                 'id' => $field->id,
                 'name' => $field->name,
-                'type' => $field->surface_type,
-                'location' => $field->roof_type ?? 'Indoor',
                 'size' => $field->length_m . 'x' . $field->width_m . 'm',
                 'price' => 'Rp ' . number_format($field->price_per_hour, 0, ',', '.'),
                 'photos' => $photos->isNotEmpty() ? $photos : ['/assets/images/futsal-1.jpg'],

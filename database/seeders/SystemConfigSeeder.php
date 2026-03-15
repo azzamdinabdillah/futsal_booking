@@ -51,7 +51,7 @@ class SystemConfigSeeder extends Seeder
             // Color Palette
             [
                 'key' => 'color_primary',
-                'value' => '#059669', // Slate 900
+                'value' => '#04714f', // Slate 900
                 'description' => 'Warna utama aplikasi (Primary)',
             ],
             [
