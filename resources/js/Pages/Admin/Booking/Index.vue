@@ -1,14 +1,32 @@
 <script setup lang="ts">
-import { h, ref } from "vue";
+import { h, ref, watch } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import DataTable from "@/Components/Table/DataTable.vue";
 import { createColumnHelper } from "@tanstack/vue-table";
 import { Booking } from "@/types/booking";
+import SelectInput from "@/Components/Admin/SelectInput.vue";
 
 const props = defineProps<{
     bookings: Booking[];
 }>();
+
+const dataTableRef = ref<{ table: any } | null>(null);
+const statusFilter = ref<string>("");
+
+const statusOptions = [
+    { value: "", label: "Semua Status" },
+    { value: "pending", label: "Menunggu" },
+    { value: "confirmed", label: "Dikonfirmasi" },
+    { value: "completed", label: "Selesai" },
+    { value: "cancelled", label: "Dibatalkan" },
+];
+
+watch(statusFilter, (newValue) => {
+    if (dataTableRef.value) {
+        dataTableRef.value.table.getColumn("status")?.setFilterValue(newValue);
+    }
+});
 
 const columnHelper = createColumnHelper<Booking>();
 
@@ -36,7 +54,7 @@ const columns = [
     }),
     columnHelper.accessor("field.name", {
         header: "Lapangan",
-        cell: (info) => info.getValue(),
+        cell: (info) => info.getValue() ?? "-",
     }),
     columnHelper.display({
         id: "schedule",
@@ -73,7 +91,7 @@ const columns = [
         cell: (info) => {
             const status = info.getValue();
             let colorClass = "bg-gray-100 text-gray-800";
-            let label = status;
+            let label: string = status;
 
             switch (status) {
                 case "pending":
@@ -153,7 +171,7 @@ const columns = [
                 class="bg-white rounded-2xl shadow-sm border border-secondary/10 overflow-hidden"
             >
                 <div
-                    class="px-6 py-5 border-b border-secondary/10 flex justify-between items-center bg-white"
+                    class="px-6 py-5 border-b border-secondary/10 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white"
                 >
                     <div>
                         <h3 class="text-lg font-bold text-dark">
@@ -163,9 +181,25 @@ const columns = [
                             Kelola semua pesanan lapangan futsal
                         </p>
                     </div>
+
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="w-full md:w-48">
+                            <SelectInput
+                                v-model="statusFilter"
+                                :options="statusOptions"
+                                placeholder="Filter Status"
+                            />
+                        </div>
+                    </div>
                 </div>
 
-                <DataTable :columns="columns" :data="bookings" />
+                <DataTable
+                    ref="dataTableRef"
+                    :columns="columns"
+                    :data="bookings"
+                    :enable-pagination="true"
+                    :initial-page-size="10"
+                />
             </div>
         </div>
     </AdminLayout>
