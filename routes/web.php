@@ -4,13 +4,20 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\SystemConfigController;
 use App\Http\Controllers\Admin\FieldController;
-use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// User Booking
+Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
+Route::get('/booking/create', [BookingController::class, 'create'])->name('booking.create');
+Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+Route::get('/booking/success/{booking}', [BookingController::class, 'success'])->name('booking.success');
 
 // Admin Auth
 Route::get('/admin/login', [AuthController::class, 'create'])->name('admin.login');
@@ -31,7 +38,7 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
     Route::delete('/fields/{field}', [FieldController::class, 'destroy'])->name('admin.fields.destroy');
 
     // Booking Management
-    Route::get('/bookings', [BookingController::class, 'index'])->name('admin.bookings.index');
-    Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('admin.bookings.show');
-    Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('admin.bookings.update-status');
+    Route::get('/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings.index');
+    Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->name('admin.bookings.show');
+    Route::patch('/bookings/{booking}/status', [AdminBookingController::class, 'updateStatus'])->name('admin.bookings.update-status');
 });

@@ -129,7 +129,7 @@ const bookedSlots = computed<string[]>(() => {
         </div>
 
         <!-- Navigation -->
-        <Navbar />
+        <Navbar transparent />
 
         <!-- Hero Content -->
         <div
@@ -419,14 +419,15 @@ const bookedSlots = computed<string[]>(() => {
                         </div>
 
                         <!-- Action Button -->
-                        <button
+                        <Link
+                            :href="`/booking/create?field_id=${selectedField?.id}&date=${selectedDate}`"
                             class="w-full bg-primary hover:opacity-90 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-success/20 transition-transform active:scale-[0.98] flex items-center justify-center gap-2 text-lg"
                         >
                             <span class="material-symbols-outlined"
                                 >shopping_cart</span
                             >
                             Booking Sekarang
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
