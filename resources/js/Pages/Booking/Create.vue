@@ -33,8 +33,8 @@ const form = useForm({
     customer_whatsapp: "",
     customer_email: "",
     play_date: props.selectedDate || new Date().toISOString().split("T")[0],
-    start_time: "08:00",
-    end_time: "09:00",
+    start_time: "",
+    end_time: "",
     payment_method: "transfer",
     policy_agreed: false,
 });
@@ -82,11 +82,103 @@ const submit = () => {
     });
 };
 
-// Generate time slots (08:00 to 23:00)
-const timeSlots = Array.from({ length: 16 }, (_, i) => {
-    const hour = (i + 8).toString().padStart(2, "0");
-    return `${hour}:00`;
+// Generate time slots (every 30 minutes)
+const timeSlots = Array.from({ length: 48 }, (_, i) => {
+    const totalMinutes = i * 30;
+    const hour = Math.floor(totalMinutes / 60)
+        .toString()
+        .padStart(2, "0");
+    const minute = (totalMinutes % 60).toString().padStart(2, "0");
+    return `${hour}:${minute}`;
 });
+
+// Operational hours from config
+const openHour = computed(
+    () => props.configs?.open_hour?.substring(0, 5) || "08:00",
+);
+const closeHour = computed(
+    () => props.configs?.close_hour?.substring(0, 5) || "23:00",
+);
+
+// Computed for available start times (filter out booked slots, past times, and operational hours)
+const availableStartTimes = computed(() => {
+    return timeSlots.filter((slot) => {
+        // 1. Filter out booked slots
+        if (isSlotBooked(slot)) return false;
+
+        // 2. Filter by operational hours (start must be >= openHour and < closeHour)
+        if (slot < openHour.value || slot >= closeHour.value) return false;
+
+        // 3. Filter out past times + 1 hour buffer if the date is today
+        if (form.play_date === today) {
+            const now = new Date();
+            // Add 1 hour buffer to current time
+            const bufferTime = new Date(now.getTime() + 60 * 60 * 1000);
+            const bufferHours = bufferTime
+                .getHours()
+                .toString()
+                .padStart(2, "0");
+            const bufferMinutes = bufferTime
+                .getMinutes()
+                .toString()
+                .padStart(2, "0");
+            const bufferString = `${bufferHours}:${bufferMinutes}`;
+
+            return slot >= bufferString;
+        }
+
+        return true;
+    });
+});
+
+// Computed for available end times based on start time
+const availableEndTimes = computed(() => {
+    if (!form.start_time) return [];
+
+    // Find the next booking after the selected start_time to prevent crossing
+    const nextBooking = props.bookings
+        ?.filter(
+            (b) =>
+                b.field_id === form.field_id &&
+                b.start_time.substring(0, 5) > form.start_time,
+        )
+        .sort((a, b) => a.start_time.localeCompare(b.start_time))[0];
+
+    const nextBookingStart = nextBooking
+        ? nextBooking.start_time.substring(0, 5)
+        : "24:00";
+
+    // End time must also be <= closeHour
+    const maxEndTime =
+        nextBookingStart < closeHour.value ? nextBookingStart : closeHour.value;
+
+    return timeSlots.filter(
+        (slot) => slot > form.start_time && slot <= maxEndTime,
+    );
+});
+
+// Check if operational hours are already passed for today
+const isOperationalPassed = computed(() => {
+    if (form.play_date !== today) return false;
+
+    const now = new Date();
+    // User can book until 1 hour before close_hour
+    const limitTime = new Date();
+    const [closeH, closeM] = closeHour.value.split(":").map(Number);
+    limitTime.setHours(closeH - 1, closeM, 0, 0);
+
+    return now >= limitTime;
+});
+
+// Watch start_time to reset end_time if it's no longer valid
+watch(
+    () => form.start_time,
+    (newStart) => {
+        if (form.end_time && form.end_time <= newStart) {
+            form.end_time = "";
+        }
+    },
+);
 
 const isProcessing = ref(false);
 
@@ -103,6 +195,13 @@ watch([() => form.play_date, () => form.field_id], () => {
             preserveState: true,
             preserveScroll: true,
             only: ["bookings"],
+            onSuccess: () => {
+                // Reset times if they are no longer available in the new context
+                if (form.start_time && isSlotBooked(form.start_time)) {
+                    form.start_time = "";
+                    form.end_time = "";
+                }
+            },
             onFinish: () => {
                 isProcessing.value = false;
             },
@@ -124,6 +223,7 @@ const bookedTimesList = computed(() => {
     if (!props.bookings || props.bookings.length === 0) return [];
     return props.bookings
         .filter((b) => b.field_id === form.field_id)
+        .sort((a, b) => a.start_time.localeCompare(b.start_time))
         .map((b) => {
             return `${b.start_time.substring(0, 5)} - ${b.end_time.substring(0, 5)}`;
         });
@@ -137,7 +237,7 @@ const bookedTimesList = computed(() => {
         <!-- Header / Navbar -->
         <Navbar />
 
-        <main class="max-w-5xl mx-auto px-4 mt-8">
+        <main class="max-w-6xl mx-auto px-4 mt-8">
             <div class="flex items-center gap-4 mb-8">
                 <Link
                     href="/"
@@ -168,7 +268,7 @@ const bookedTimesList = computed(() => {
 
                         <div class="space-y-6">
                             <!-- Booked Slots Info -->
-                            <div class="relative min-h-[100px]">
+                            <div class="relative">
                                 <!-- Loading Overlay -->
                                 <div
                                     v-if="isProcessing"
@@ -304,10 +404,26 @@ const bookedTimesList = computed(() => {
                                         <div class="relative flex items-center">
                                             <select
                                                 v-model="form.start_time"
-                                                class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-dark appearance-none relative z-0"
+                                                :disabled="
+                                                    isOperationalPassed ||
+                                                    availableStartTimes.length ===
+                                                        0
+                                                "
+                                                class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-dark appearance-none relative z-0 disabled:bg-gray-50 disabled:cursor-not-allowed"
                                             >
                                                 <option
-                                                    v-for="slot in timeSlots"
+                                                    value=""
+                                                    disabled
+                                                    selected
+                                                >
+                                                    {{
+                                                        isOperationalPassed
+                                                            ? "Jam operasional berakhir"
+                                                            : "Pilih Jam Mulai"
+                                                    }}
+                                                </option>
+                                                <option
+                                                    v-for="slot in availableStartTimes"
                                                     :key="slot"
                                                     :value="slot"
                                                 >
@@ -327,10 +443,27 @@ const bookedTimesList = computed(() => {
                                         <div class="relative flex items-center">
                                             <select
                                                 v-model="form.end_time"
-                                                class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-dark appearance-none relative z-0"
+                                                :disabled="
+                                                    !form.start_time ||
+                                                    isOperationalPassed
+                                                "
+                                                class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-dark appearance-none relative z-0 disabled:bg-gray-50 disabled:cursor-not-allowed"
                                             >
                                                 <option
-                                                    v-for="slot in timeSlots"
+                                                    value=""
+                                                    disabled
+                                                    selected
+                                                >
+                                                    {{
+                                                        isOperationalPassed
+                                                            ? "Jam operasional berakhir"
+                                                            : !form.start_time
+                                                              ? "Pilih jam mulai dulu"
+                                                              : "Pilih Jam Selesai"
+                                                    }}
+                                                </option>
+                                                <option
+                                                    v-for="slot in availableEndTimes"
                                                     :key="slot"
                                                     :value="slot"
                                                 >
