@@ -4,6 +4,7 @@ import Navbar from "../Components/Navbar.vue";
 import { ref, computed, watch } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Autoplay, Pagination } from "swiper/modules";
+import { CircleDot, Maximize, ShoppingCart, Star } from "lucide-vue-next";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -111,10 +112,6 @@ const bookedSlots = computed<string[]>(() => {
 <template>
     <Head>
         <title>Beranda</title>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-            rel="stylesheet"
-        />
     </Head>
 
     <div class="min-h-screen relative font-sans">
@@ -207,9 +204,7 @@ const bookedSlots = computed<string[]>(() => {
                                 : 'bg-white text-secondary border-secondary/20 hover:border-primary/50'
                         "
                     >
-                        <span class="material-symbols-outlined text-lg"
-                            >sports_soccer</span
-                        >
+                        <CircleDot class="w-5 h-5" />
                         <span
                             class="text-sm font-bold uppercase tracking-wider"
                             >{{ field.name }}</span
@@ -265,10 +260,7 @@ const bookedSlots = computed<string[]>(() => {
                                     <!-- <div
                                         class="bg-warning/10 text-warning px-2 py-0.5 rounded flex items-center gap-1 w-fit"
                                     >
-                                        <span
-                                            class="material-symbols-outlined text-xs"
-                                            >star</span
-                                        >
+                                        <Star class="w-3 h-3" />
                                         <span class="text-xs font-bold"
                                             >4.8</span
                                         >
@@ -294,10 +286,7 @@ const bookedSlots = computed<string[]>(() => {
                                 <div
                                     class="flex items-center gap-1.5 px-2 py-1.5 sm:gap-2 sm:px-3 sm:py-2 bg-light rounded-lg border border-secondary/10 w-fit"
                                 >
-                                    <span
-                                        class="material-symbols-outlined text-info text-sm sm:text-base"
-                                        >aspect_ratio</span
-                                    >
+                                    <Maximize class="w-4 h-4 text-info" />
                                     <span
                                         class="font-semibold text-primary text-xs sm:text-sm"
                                         >{{ selectedField.size }}</span
@@ -423,9 +412,7 @@ const bookedSlots = computed<string[]>(() => {
                             :href="`/booking/create?field_id=${selectedField?.id}&date=${selectedDate}`"
                             class="w-full bg-primary hover:opacity-90 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-success/20 transition-transform active:scale-[0.98] flex items-center justify-center gap-2 text-lg"
                         >
-                            <span class="material-symbols-outlined"
-                                >shopping_cart</span
-                            >
+                            <ShoppingCart class="w-6 h-6" />
                             Booking Sekarang
                         </Link>
                     </div>

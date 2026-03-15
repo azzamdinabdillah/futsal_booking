@@ -3,6 +3,18 @@ import { Head, Link } from "@inertiajs/vue3";
 import Navbar from "../../Components/Navbar.vue";
 import { ref } from "vue";
 import { Booking } from "../../types/booking";
+import {
+    CheckCircle2,
+    CircleDot,
+    Calendar,
+    Clock,
+    Banknote,
+    Landmark,
+    CreditCard,
+    Check,
+    MessageCircle,
+    Home,
+} from "lucide-vue-next";
 
 const props = defineProps<{
     booking: Booking;
@@ -51,9 +63,7 @@ const copyToClipboard = (text: string) => {
                 <div
                     class="w-20 h-20 bg-success/10 text-success rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm border border-success/20 relative"
                 >
-                    <span class="material-symbols-outlined text-4xl"
-                        >check_circle</span
-                    >
+                    <CheckCircle2 class="w-10 h-10" />
                 </div>
                 <h1 class="text-3xl font-bold mb-2 tracking-tight text-dark">
                     Booking Berhasil!
@@ -99,10 +109,7 @@ const copyToClipboard = (text: string) => {
                         <div
                             class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"
                         >
-                            <span
-                                class="material-symbols-outlined text-secondary/60 text-xl"
-                                >stadium</span
-                            >
+                            <CircleDot class="w-5 h-5 text-secondary/60" />
                         </div>
                         <div>
                             <p
@@ -119,10 +126,7 @@ const copyToClipboard = (text: string) => {
                         <div
                             class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"
                         >
-                            <span
-                                class="material-symbols-outlined text-secondary/60 text-xl"
-                                >calendar_month</span
-                            >
+                            <Calendar class="w-5 h-5 text-secondary/60" />
                         </div>
                         <div>
                             <p
@@ -139,10 +143,7 @@ const copyToClipboard = (text: string) => {
                         <div
                             class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"
                         >
-                            <span
-                                class="material-symbols-outlined text-secondary/60 text-xl"
-                                >schedule</span
-                            >
+                            <Clock class="w-5 h-5 text-secondary/60" />
                         </div>
                         <div>
                             <p
@@ -160,10 +161,7 @@ const copyToClipboard = (text: string) => {
                         <div
                             class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"
                         >
-                            <span
-                                class="material-symbols-outlined text-secondary/60 text-xl"
-                                >payments</span
-                            >
+                            <Banknote class="w-5 h-5 text-secondary/60" />
                         </div>
                         <div>
                             <p
@@ -214,9 +212,7 @@ const copyToClipboard = (text: string) => {
                     <h3
                         class="font-bold text-dark text-base flex items-center gap-3"
                     >
-                        <span class="material-symbols-outlined text-primary"
-                            >account_balance</span
-                        >
+                        <Landmark class="w-5 h-5 text-primary" />
                         Instruksi Transfer
                     </h3>
 
@@ -230,10 +226,7 @@ const copyToClipboard = (text: string) => {
                                 >
                                     {{ configs?.bank_name || "BANK BCA" }}
                                 </p>
-                                <span
-                                    class="material-symbols-outlined text-gray-300"
-                                    >contactless</span
-                                >
+                                <CreditCard class="w-5 h-5 text-gray-300" />
                             </div>
                             <div
                                 class="flex items-center justify-between gap-4 mb-2"
@@ -255,11 +248,7 @@ const copyToClipboard = (text: string) => {
                                     "
                                     class="text-primary text-[10px] font-bold hover:underline uppercase tracking-wider flex items-center gap-1"
                                 >
-                                    <span
-                                        v-if="copied"
-                                        class="material-symbols-outlined text-xs"
-                                        >done</span
-                                    >
+                                    <Check v-if="copied" class="w-3 h-3" />
                                     {{ copied ? "Berhasil" : "Salin" }}
                                 </button>
                             </div>
@@ -295,18 +284,14 @@ const copyToClipboard = (text: string) => {
                         target="_blank"
                         class="w-full bg-[#25D366] hover:opacity-90 text-white font-bold py-4 rounded-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 text-base"
                     >
-                        <span class="material-symbols-outlined text-xl"
-                            >chat</span
-                        >
+                        <MessageCircle class="w-5 h-5" />
                         Konfirmasi WhatsApp
                     </a>
                     <Link
                         href="/"
                         class="w-full bg-white hover:bg-gray-50 text-secondary font-semibold py-4 rounded-lg border border-gray-200 transition-all flex items-center justify-center gap-3 text-sm"
                     >
-                        <span class="material-symbols-outlined text-lg"
-                            >home</span
-                        >
+                        <Home class="w-5 h-5" />
                         Kembali ke Beranda
                     </Link>
                 </div>
