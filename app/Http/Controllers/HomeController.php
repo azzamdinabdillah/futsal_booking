@@ -17,10 +17,17 @@ class HomeController extends Controller
 
         $fields = Field::with('photos')->where('status', 'active')->get()->map(function ($field) {
             $photos = $field->photos->sortBy('sort_order')->map(function ($photo) {
-                if (str_starts_with($photo->photo_url, 'assets/')) {
-                    return '/' . $photo->photo_url;
+                $url = $photo->photo_url;
+                
+                if (str_starts_with($url, 'assets/') || str_starts_with($url, '/assets/')) {
+                    return '/' . ltrim($url, '/');
                 }
-                return '/storage/' . $photo->photo_url;
+                
+                if (str_starts_with($url, 'storage/') || str_starts_with($url, '/storage/')) {
+                    return '/' . ltrim($url, '/');
+                }
+
+                return '/storage/' . $url;
             });
 
             return [

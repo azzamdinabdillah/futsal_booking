@@ -49,6 +49,25 @@ const selectedField = ref<Field | null>(
 );
 const isLoading = ref<boolean>(false);
 
+// Generate next 30 days
+const availableDates = computed(() => {
+    const dates = [];
+    const today = new Date();
+    for (let i = 0; i < 30; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        const dateString = date.toISOString().split("T")[0];
+        dates.push({
+            fullDate: dateString,
+            dayName: date.toLocaleDateString("id-ID", { weekday: "short" }),
+            dayNumber: date.getDate(),
+            monthName: date.toLocaleDateString("id-ID", { month: "short" }),
+            year: date.getFullYear(),
+        });
+    }
+    return dates;
+});
+
 // Watch for date changes to fetch new bookings
 watch(selectedDate, (newDate) => {
     isLoading.value = true;
@@ -165,7 +184,7 @@ const bookedSlots = computed<string[]>(() => {
     </div>
 
     <!-- Schedule Section -->
-    <div id="jadwal" class="bg-light py-12 px-4 sm:px-6 lg:px-8">
+    <div id="jadwal" class="bg-light py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
         <div class="max-w-4xl mx-auto">
             <!-- Header -->
             <div class="flex items-center justify-between mb-6">
@@ -206,7 +225,7 @@ const bookedSlots = computed<string[]>(() => {
             >
                 <div class="flex flex-col md:flex-row">
                     <!-- Image Section -->
-                    <div class="w-full md:w-1/3 h-64 md:h-auto relative group">
+                    <div class="w-full md:w-[40%] h-64 md:h-auto relative">
                         <swiper
                             :modules="modules"
                             :slides-per-view="1"
@@ -230,26 +249,31 @@ const bookedSlots = computed<string[]>(() => {
                                 />
                             </swiper-slide>
                         </swiper>
-                        <div
-                            class="absolute top-4 left-4 bg-warning text-dark px-3 py-1 rounded-lg text-xs font-bold shadow-sm flex items-center gap-1 z-10"
-                        >
-                            <span class="material-symbols-outlined text-sm"
-                                >star</span
-                            >
-                            4.8
-                        </div>
                     </div>
 
                     <!-- Content Section -->
-                    <div class="flex-1 p-6 flex flex-col gap-6">
+                    <div class="flex-1 min-w-0 p-6 flex flex-col gap-6">
                         <!-- Top Info -->
-                        <div class="flex flex-col gap-6">
+                        <div class="flex flex-col gap-4">
                             <div class="flex justify-between items-start">
-                                <h3
-                                    class="text-2xl sm:text-3xl font-bold text-primary leading-tight"
-                                >
-                                    {{ selectedField.name }}
-                                </h3>
+                                <div class="space-y-1">
+                                    <h3
+                                        class="text-2xl sm:text-3xl font-bold text-primary leading-tight"
+                                    >
+                                        {{ selectedField.name }}
+                                    </h3>
+                                    <!-- <div
+                                        class="bg-warning/10 text-warning px-2 py-0.5 rounded flex items-center gap-1 w-fit"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-xs"
+                                            >star</span
+                                        >
+                                        <span class="text-xs font-bold"
+                                            >4.8</span
+                                        >
+                                    </div> -->
+                                </div>
                                 <div
                                     class="text-right shrink-0 flex items-center gap-1"
                                 >
@@ -285,30 +309,51 @@ const bookedSlots = computed<string[]>(() => {
                         <!-- <div class="border-t border-secondary/10"></div> -->
 
                         <!-- Date Picker -->
-                        <div class="space-y-2">
-                            <label class="block text-sm font-bold text-primary"
-                                >Pilih Tanggal Main</label
-                            >
-                            <div class="relative w-full">
-                                <div
-                                    class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-primary"
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <label
+                                    class="block text-sm font-bold text-primary uppercase tracking-wider"
+                                    >Pilih Tanggal Main</label
                                 >
-                                    <span
-                                        v-if="!isLoading"
-                                        class="material-symbols-outlined"
-                                        >calendar_month</span
+                                <div
+                                    v-if="isLoading"
+                                    class="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"
+                                ></div>
+                            </div>
+                            <div
+                                class="overflow-x-auto no-scrollbar -mx-1 px-1"
+                            >
+                                <div class="flex gap-3 min-w-max overflow-auto">
+                                    <button
+                                        v-for="date in availableDates"
+                                        :key="date.fullDate"
+                                        @click="selectedDate = date.fullDate"
+                                        :disabled="isLoading"
+                                        class="flex flex-col items-center cursor-pointer justify-center w-14 h-16 sm:w-16 sm:h-20 rounded-lg sm:rounded-xl border-2 transition-all duration-300 transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        :class="
+                                            selectedDate === date.fullDate
+                                                ? 'bg-primary border-primary text-white ring-2 ring-primary/10'
+                                                : 'bg-white border-secondary/10 text-secondary hover:border-primary/40 hover:text-primary'
+                                        "
                                     >
-                                    <div
-                                        v-else
-                                        class="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"
-                                    ></div>
+                                        <span
+                                            class="text-[8px] sm:text-[9px] font-bold uppercase"
+                                            >{{ date.dayName }}</span
+                                        >
+                                        <span
+                                            class="text-lg sm:text-xl font-black leading-none my-0.5"
+                                            >{{ date.dayNumber }}</span
+                                        >
+                                        <div
+                                            class="flex gap-0.5 text-[7px] sm:text-[8px] font-bold"
+                                        >
+                                            <span>{{ date.monthName }}</span>
+                                            <span class="hidden sm:inline">{{
+                                                date.year
+                                            }}</span>
+                                        </div>
+                                    </button>
                                 </div>
-                                <input
-                                    type="date"
-                                    v-model="selectedDate"
-                                    :disabled="isLoading"
-                                    class="w-full pl-10 pr-4 py-3 rounded-xl border border-secondary/20 focus:ring-2 focus:ring-primary/20 focus:border-primary text-primary font-bold transition-all hover:border-primary/50 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
-                                />
                             </div>
                         </div>
 
@@ -351,7 +396,7 @@ const bookedSlots = computed<string[]>(() => {
                             </h4>
                             <div
                                 v-if="bookedSlots.length > 0"
-                                class="grid grid-cols-3 sm:grid-cols-4 gap-2"
+                                class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2"
                             >
                                 <div
                                     v-for="slot in bookedSlots"
@@ -375,7 +420,7 @@ const bookedSlots = computed<string[]>(() => {
 
                         <!-- Action Button -->
                         <button
-                            class="w-full bg-success hover:opacity-90 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-success/20 transition-transform active:scale-[0.98] flex items-center justify-center gap-2 text-lg"
+                            class="w-full bg-primary hover:opacity-90 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-success/20 transition-transform active:scale-[0.98] flex items-center justify-center gap-2 text-lg"
                         >
                             <span class="material-symbols-outlined"
                                 >shopping_cart</span
