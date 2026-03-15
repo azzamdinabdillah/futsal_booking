@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\SystemConfigController;
 use App\Http\Controllers\Admin\FieldController;
+use App\Http\Controllers\Admin\BookingController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -28,4 +29,9 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
     Route::get('/fields/{field}/edit', [FieldController::class, 'edit'])->name('admin.fields.edit');
     Route::put('/fields/{field}', [FieldController::class, 'update'])->name('admin.fields.update');
     Route::delete('/fields/{field}', [FieldController::class, 'destroy'])->name('admin.fields.destroy');
+
+    // Booking Management
+    Route::get('/bookings', [BookingController::class, 'index'])->name('admin.bookings.index');
+    Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('admin.bookings.show');
+    Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('admin.bookings.update-status');
 });
